@@ -8,21 +8,20 @@ import (
 	"os"
 	"time"
 
+	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
+	tmjsonclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/simapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	kiiparams "github.com/kiichain/kiichain/v2/app/params"
 	"github.com/rs/zerolog"
-	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
-	tmjsonclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
 )
 
 type (
@@ -40,7 +39,7 @@ type (
 		ValidatorAddr       sdk.ValAddress
 		ValidatorAddrString string
 		FeeGranterAddr      sdk.AccAddress
-		Encoding            simappparams.EncodingConfig
+		Encoding            kiiparams.EncodingConfig
 		GasPrices           string
 		GasAdjustment       float64
 		GRPCEndpoint        string
@@ -97,7 +96,7 @@ func NewOracleClient(
 		ValidatorAddr:       sdk.ValAddress(validatorAddrString),
 		ValidatorAddrString: validatorAddrString,
 		FeeGranterAddr:      feegrantAddr,
-		Encoding:            simapp.MakeTestEncodingConfig(),
+		Encoding:            kiiparams.MakeEncodingConfig(),
 		GasAdjustment:       gasAdjustment,
 		GRPCEndpoint:        grpcEndpoint,
 		GasPrices:           gasPrices,

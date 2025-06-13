@@ -11,6 +11,7 @@ import (
 	"syscall"
 	"time"
 
+	"cosmossdk.io/math"
 	input "github.com/cosmos/cosmos-sdk/client/input"
 
 	"github.com/rs/zerolog"
@@ -177,9 +178,9 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	// create a map with the deviation by denom from config file
-	deviations := make(map[string]sdk.Dec, len(cfg.Deviations))
+	deviations := make(map[string]math.LegacyDec, len(cfg.Deviations))
 	for _, deviation := range cfg.Deviations {
-		threshold, err := sdk.NewDecFromStr(deviation.Threshold)
+		threshold, err := math.LegacyNewDecFromStr(deviation.Threshold)
 		if err != nil {
 			return err
 		}

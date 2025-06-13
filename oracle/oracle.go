@@ -17,7 +17,7 @@ import (
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 
-	oracletypes "github.com/kiichain/kiichain/x/oracle/types"
+	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
 	"github.com/kiichain/price-feeder/closer"
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/client"
@@ -85,7 +85,7 @@ func New(
 	oc client.OracleClient,
 	currencyPairs []config.CurrencyPair,
 	providerTimeout time.Duration,
-	deviations map[string]sdk.Dec,
+	deviations map[string]math.LegacyDec,
 	endpoints map[string]config.ProviderEndpoint,
 	healthchecksConfig []config.Healthchecks,
 ) *Oracle {

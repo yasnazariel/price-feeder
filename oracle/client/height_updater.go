@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	tmrpcclient "github.com/cometbft/cometbft/rpc/client"
+	tmtypes "github.com/cometbft/cometbft/types"
 	"github.com/rs/zerolog"
-	tmrpcclient "github.com/tendermint/tendermint/rpc/client"
-	tmtypes "github.com/tendermint/tendermint/types"
 )
 
 var (

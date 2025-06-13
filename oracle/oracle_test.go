@@ -16,7 +16,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"golang.org/x/exp/slices"
 
-	oracletypes "github.com/kiichain/kiichain/x/oracle/types"
+	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/client"
 	"github.com/kiichain/price-feeder/oracle/provider"

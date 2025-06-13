@@ -3,7 +3,7 @@ package oracle
 import (
 	"testing"
 
-	oracletypes "github.com/kiichain/kiichain/x/oracle/types"
+	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
 	"github.com/stretchr/testify/require"
 )
 
