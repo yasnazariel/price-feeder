@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/BurntSushi/toml"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -48,7 +48,7 @@ var (
 
 	// maxDeviationThreshold is the maxmimum allowed amount of standard
 	// deviations which validators are able to set for a given asset.
-	maxDeviationThreshold = sdk.MustNewDecFromStr("3.0")
+	maxDeviationThreshold = math.LegacyMustNewDecFromStr("3.0")
 
 	// SupportedQuotes defines a lookup table for which assets we support
 	// using as quotes.
@@ -292,7 +292,7 @@ func ParseConfig(configPath string) (Config, error) {
 	// iterate over the deviation and check if valid
 	for _, deviation := range cfg.Deviations {
 		// validate the deviation threshold
-		threshold, err := sdk.NewDecFromStr(deviation.Threshold)
+		threshold, err := math.LegacyNewDecFromStr(deviation.Threshold)
 		if err != nil {
 			return cfg, fmt.Errorf("deviation thresholds must be numeric: %w", err)
 		}

@@ -9,10 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/armon/go-metrics"
+	sdkmath "cosmossdk.io/math"
 	sdkclient "github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/hashicorp/go-metrics"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
@@ -39,13 +40,13 @@ type Oracle struct {
 	priceProviders     map[string]provider.Provider
 	failedProviders    map[string]error
 	oracleClient       client.OracleClient
-	deviations         map[string]sdk.Dec
+	deviations         map[string]sdkmath.LegacyDec
 	endpoints          map[string]config.ProviderEndpoint
 
 	// variables store and handle the prices
 	mtx             sync.RWMutex
 	lastPriceSyncTS time.Time
-	prices          map[string]sdk.Dec // map with the prices to be requested
+	prices          map[string]sdkmath.LegacyDec // map with the prices to be requested
 	paramCache      ParamCache
 	jailCache       JailCache
 	healthchecks    map[string]http.Client
@@ -85,7 +86,7 @@ func New(
 	oc client.OracleClient,
 	currencyPairs []config.CurrencyPair,
 	providerTimeout time.Duration,
-	deviations map[string]math.LegacyDec,
+	deviations map[string]sdkmath.LegacyDec,
 	endpoints map[string]config.ProviderEndpoint,
 	healthchecksConfig []config.Healthchecks,
 ) *Oracle {
@@ -358,9 +359,9 @@ func GetComputedPrices(
 	providerCandles provider.AggregatedProviderCandles,
 	providerPrices provider.AggregatedProviderPrices,
 	providerPairs map[string][]types.CurrencyPair,
-	deviations map[string]sdk.Dec,
+	deviations map[string]sdkmath.LegacyDec,
 	requiredRates map[string]struct{},
-) (prices map[string]sdk.Dec, err error) {
+) (prices map[string]sdkmath.LegacyDec, err error) {
 	// only do asset provider map logic is log level is debug
 	if logger.GetLevel() == zerolog.DebugLevel {
 		assetProviderMap := make(map[string][]string)
