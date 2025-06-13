@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/types"
 	"github.com/rs/zerolog"
@@ -44,8 +44,8 @@ func TestBinanceProvider_GetTickerPrices(t *testing.T) {
 		prices, err := p.GetTickerPrices(types.CurrencyPair{Base: "ATOM", Quote: "USDT"})
 		require.NoError(t, err)
 		require.Len(t, prices, 1)
-		require.Equal(t, sdk.MustNewDecFromStr(lastPrice), prices["ATOMUSDT"].Price)
-		require.Equal(t, sdk.MustNewDecFromStr(volume), prices["ATOMUSDT"].Volume)
+		require.Equal(t, math.LegacyMustNewDecFromStr(lastPrice), prices["ATOMUSDT"].Price)
+		require.Equal(t, math.LegacyMustNewDecFromStr(volume), prices["ATOMUSDT"].Volume)
 	})
 
 	t.Run("valid_request_multi_ticker", func(t *testing.T) {
@@ -73,10 +73,10 @@ func TestBinanceProvider_GetTickerPrices(t *testing.T) {
 		)
 		require.NoError(t, err)
 		require.Len(t, prices, 2)
-		require.Equal(t, sdk.MustNewDecFromStr(lastPriceAtom), prices["ATOMUSDT"].Price)
-		require.Equal(t, sdk.MustNewDecFromStr(volume), prices["ATOMUSDT"].Volume)
-		require.Equal(t, sdk.MustNewDecFromStr(lastPriceKii), prices["KIIUSDT"].Price)
-		require.Equal(t, sdk.MustNewDecFromStr(volume), prices["KIIUSDT"].Volume)
+		require.Equal(t, math.LegacyMustNewDecFromStr(lastPriceAtom), prices["ATOMUSDT"].Price)
+		require.Equal(t, math.LegacyMustNewDecFromStr(volume), prices["ATOMUSDT"].Volume)
+		require.Equal(t, math.LegacyMustNewDecFromStr(lastPriceKii), prices["KIIUSDT"].Price)
+		require.Equal(t, math.LegacyMustNewDecFromStr(volume), prices["KIIUSDT"].Volume)
 	})
 
 	t.Run("invalid_request_invalid_ticker", func(t *testing.T) {

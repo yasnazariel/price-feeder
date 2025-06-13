@@ -7,9 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/oracle/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const (
@@ -71,12 +70,12 @@ func (p MockProvider) GetTickerPrices(pairs ...types.CurrencyPair) (map[string]T
 			continue
 		}
 
-		price, err := sdk.NewDecFromStr(r[2])
+		price, err := math.LegacyNewDecFromStr(r[2])
 		if err != nil {
 			return nil, fmt.Errorf("failed to read mock price (%s) for %s", r[2], ticker)
 		}
 
-		volume, err := sdk.NewDecFromStr(r[3])
+		volume, err := math.LegacyNewDecFromStr(r[3])
 		if err != nil {
 			return nil, fmt.Errorf("failed to read mock volume (%s) for %s", r[3], ticker)
 		}

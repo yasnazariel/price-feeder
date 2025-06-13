@@ -11,6 +11,7 @@ import (
 	"sync"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
 
@@ -18,7 +19,6 @@ import (
 	"github.com/kiichain/price-feeder/oracle/types"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const (
@@ -189,8 +189,8 @@ func (p *CoinbaseProvider) GetCandlePrices(pairs ...types.CurrencyPair) (map[str
 
 		candleSlice := []CandlePrice{
 			{
-				Price:  sdk.ZeroDec(),
-				Volume: sdk.ZeroDec(),
+				Price:  math.LegacyZeroDec(),
+				Volume: math.LegacyZeroDec(),
 			},
 		}
 		startTime := trades[0].Time
@@ -203,16 +203,16 @@ func (p *CoinbaseProvider) GetCandlePrices(pairs ...types.CurrencyPair) (map[str
 				index++
 				startTime = trade.Time
 				candleSlice = append(candleSlice, CandlePrice{
-					Price:  sdk.ZeroDec(),
-					Volume: sdk.ZeroDec(),
+					Price:  math.LegacyZeroDec(),
+					Volume: math.LegacyZeroDec(),
 				})
 			}
 
-			size, err := sdk.NewDecFromStr(trade.Size)
+			size, err := math.LegacyNewDecFromStr(trade.Size)
 			if err != nil {
 				return nil, err
 			}
-			price, err := sdk.NewDecFromStr(trade.Price)
+			price, err := math.LegacyNewDecFromStr(trade.Price)
 			if err != nil {
 				return nil, err
 			}

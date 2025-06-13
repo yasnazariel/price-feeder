@@ -6,9 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/oracle/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const (
@@ -38,8 +37,8 @@ type Provider interface {
 // TickerPrice defines price and volume information for a symbol or ticker
 // exchange rate.
 type TickerPrice struct {
-	Price  sdk.Dec // last trade price
-	Volume sdk.Dec // 24h volume
+	Price  math.LegacyDec // last trade price
+	Volume math.LegacyDec // 24h volume
 }
 
 // AggregatedProviderPrices defines a type alias for a map
@@ -49,9 +48,9 @@ type AggregatedProviderPrices map[string]map[string]TickerPrice
 // CandlePrice defines price, volume, and time information for an
 // exchange rate.
 type CandlePrice struct {
-	Price     sdk.Dec // last trade price
-	Volume    sdk.Dec // volume
-	TimeStamp int64   // timestamp
+	Price     math.LegacyDec // last trade price
+	Volume    math.LegacyDec // volume
+	TimeStamp int64          // timestamp
 }
 
 // AggregatedProviderCandles defines a type alias for a map
@@ -80,12 +79,12 @@ func newHTTPClientWithTimeout(timeout time.Duration) *http.Client {
 }
 
 func newTickerPrice(provider, symbol, lastPrice, volume string) (TickerPrice, error) {
-	price, err := sdk.NewDecFromStr(lastPrice)
+	price, err := math.LegacyNewDecFromStr(lastPrice)
 	if err != nil {
 		return TickerPrice{}, fmt.Errorf("failed to parse %s price (%s) for %s", provider, lastPrice, symbol)
 	}
 
-	volumeDec, err := sdk.NewDecFromStr(volume)
+	volumeDec, err := math.LegacyNewDecFromStr(volume)
 	if err != nil {
 		return TickerPrice{}, fmt.Errorf("failed to parse %s volume (%s) for %s", provider, volume, symbol)
 	}
@@ -94,12 +93,12 @@ func newTickerPrice(provider, symbol, lastPrice, volume string) (TickerPrice, er
 }
 
 func newCandlePrice(provider, symbol, lastPrice, volume string, timeStamp int64) (CandlePrice, error) {
-	price, err := sdk.NewDecFromStr(lastPrice)
+	price, err := math.LegacyNewDecFromStr(lastPrice)
 	if err != nil {
 		return CandlePrice{}, fmt.Errorf("failed to parse %s price (%s) for %s", provider, lastPrice, symbol)
 	}
 
-	volumeDec, err := sdk.NewDecFromStr(volume)
+	volumeDec, err := math.LegacyNewDecFromStr(volume)
 	if err != nil {
 		return CandlePrice{}, fmt.Errorf("failed to parse %s volume (%s) for %s", provider, volume, symbol)
 	}
@@ -114,7 +113,7 @@ func PastUnixTime(t time.Duration) int64 {
 }
 
 //nolint:unused,deadcode
-func strToDec(str string) sdk.Dec {
+func strToDec(str string) math.LegacyDec {
 	if strings.Contains(str, ".") {
 		split := strings.Split(str, ".")
 		if len(split[1]) > 18 {
@@ -122,5 +121,5 @@ func strToDec(str string) sdk.Dec {
 			str = split[0] + "." + split[1][0:18]
 		}
 	}
-	return sdk.MustNewDecFromStr(str)
+	return math.LegacyMustNewDecFromStr(str)
 }

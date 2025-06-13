@@ -5,9 +5,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/oracle/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -31,8 +31,8 @@ ATOM,USDC,21.84,1827884.77
 		prices, err := mp.GetTickerPrices(types.CurrencyPair{Base: "UMEE", Quote: "USDT"})
 		require.NoError(t, err)
 		require.Len(t, prices, 1)
-		require.Equal(t, sdk.MustNewDecFromStr("3.04"), prices["UMEEUSDT"].Price)
-		require.Equal(t, sdk.MustNewDecFromStr("1827884.77"), prices["UMEEUSDT"].Volume)
+		require.Equal(t, math.LegacyMustNewDecFromStr("3.04"), prices["UMEEUSDT"].Price)
+		require.Equal(t, math.LegacyMustNewDecFromStr("1827884.77"), prices["UMEEUSDT"].Volume)
 	})
 
 	t.Run("valid_request_multi_ticker", func(t *testing.T) {
@@ -55,10 +55,10 @@ ATOM,USDC,21.84,1827884.77
 		)
 		require.NoError(t, err)
 		require.Len(t, prices, 2)
-		require.Equal(t, sdk.MustNewDecFromStr("3.04"), prices["UMEEUSDT"].Price)
-		require.Equal(t, sdk.MustNewDecFromStr("1827884.77"), prices["UMEEUSDT"].Volume)
-		require.Equal(t, sdk.MustNewDecFromStr("21.84"), prices["ATOMUSDC"].Price)
-		require.Equal(t, sdk.MustNewDecFromStr("1827884.77"), prices["ATOMUSDC"].Volume)
+		require.Equal(t, math.LegacyMustNewDecFromStr("3.04"), prices["UMEEUSDT"].Price)
+		require.Equal(t, math.LegacyMustNewDecFromStr("1827884.77"), prices["UMEEUSDT"].Volume)
+		require.Equal(t, math.LegacyMustNewDecFromStr("21.84"), prices["ATOMUSDC"].Price)
+		require.Equal(t, math.LegacyMustNewDecFromStr("1827884.77"), prices["ATOMUSDC"].Volume)
 	})
 
 	t.Run("invalid_request_bad_response", func(t *testing.T) {
