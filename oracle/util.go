@@ -4,12 +4,11 @@ import (
 	"sort"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/oracle/provider"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var minimumTimeWeight = sdk.MustNewDecFromStr("0.2")
+var minimumTimeWeight = math.LegacyMustNewDecFromStr("0.2")
 
 // this lets us mock now for tests
 var mockNow int64
@@ -20,13 +19,13 @@ const (
 )
 
 // compute VWAP for each base by dividing the Σ {P * V} by Σ {V}
-func vwap(weightedPrices, volumeSum map[string]sdk.Dec) (map[string]sdk.Dec, error) {
-	vwap := make(map[string]sdk.Dec)
+func vwap(weightedPrices, volumeSum map[string]math.LegacyDec) (map[string]math.LegacyDec, error) {
+	vwap := make(map[string]math.LegacyDec)
 
 	for base, p := range weightedPrices {
-		if !volumeSum[base].Equal(sdk.ZeroDec()) {
+		if !volumeSum[base].Equal(math.LegacyZeroDec()) {
 			if _, ok := vwap[base]; !ok {
-				vwap[base] = sdk.ZeroDec()
+				vwap[base] = math.LegacyZeroDec()
 			}
 
 			vwap[base] = p.Quo(volumeSum[base])
@@ -41,19 +40,19 @@ func vwap(weightedPrices, volumeSum map[string]sdk.Dec) (map[string]sdk.Dec, err
 // of provider => {<base> => <TickerPrice>, ...}.
 //
 // Ref: https://en.wikipedia.org/wiki/Volume-weighted_average_price
-func ComputeVWAP(prices provider.AggregatedProviderPrices) (map[string]sdk.Dec, error) {
+func ComputeVWAP(prices provider.AggregatedProviderPrices) (map[string]math.LegacyDec, error) {
 	var (
-		weightedPrices = make(map[string]sdk.Dec)
-		volumeSum      = make(map[string]sdk.Dec)
+		weightedPrices = make(map[string]math.LegacyDec)
+		volumeSum      = make(map[string]math.LegacyDec)
 	)
 
 	for _, providerPrices := range prices {
 		for base, tp := range providerPrices {
 			if _, ok := weightedPrices[base]; !ok {
-				weightedPrices[base] = sdk.ZeroDec()
+				weightedPrices[base] = math.LegacyZeroDec()
 			}
 			if _, ok := volumeSum[base]; !ok {
-				volumeSum[base] = sdk.ZeroDec()
+				volumeSum[base] = math.LegacyZeroDec()
 			}
 
 			// weightedPrices[base] = Σ {P * V} for all TickerPrice
@@ -73,10 +72,10 @@ func ComputeVWAP(prices provider.AggregatedProviderPrices) (map[string]sdk.Dec, 
 // provider => {<base> => <TickerPrice>, ...}.
 //
 // Ref : https://en.wikipedia.org/wiki/Time-weighted_average_price
-func ComputeTVWAP(prices provider.AggregatedProviderCandles) (map[string]sdk.Dec, error) {
+func ComputeTVWAP(prices provider.AggregatedProviderCandles) (map[string]math.LegacyDec, error) {
 	var (
-		weightedPrices = make(map[string]sdk.Dec)
-		volumeSum      = make(map[string]sdk.Dec)
+		weightedPrices = make(map[string]math.LegacyDec)
+		volumeSum      = make(map[string]math.LegacyDec)
 		now            = provider.PastUnixTime(0)
 		timePeriod     = provider.PastUnixTime(tvwapCandlePeriod)
 	)
@@ -91,10 +90,10 @@ func ComputeTVWAP(prices provider.AggregatedProviderCandles) (map[string]sdk.Dec
 			cp := providerPrices[base]
 
 			if _, ok := weightedPrices[base]; !ok {
-				weightedPrices[base] = sdk.ZeroDec()
+				weightedPrices[base] = math.LegacyZeroDec()
 			}
 			if _, ok := volumeSum[base]; !ok {
-				volumeSum[base] = sdk.ZeroDec()
+				volumeSum[base] = math.LegacyZeroDec()
 			}
 
 			// Sort by timestamp old -> new
@@ -102,13 +101,13 @@ func ComputeTVWAP(prices provider.AggregatedProviderCandles) (map[string]sdk.Dec
 				return cp[i].TimeStamp < cp[j].TimeStamp
 			})
 
-			period := sdk.NewDec(now - cp[0].TimeStamp)
+			period := math.LegacyNewDec(now - cp[0].TimeStamp)
 
 			// weight unit is one, then decreased proportionately by candle age
-			weightUnit := sdk.OneDec().Sub(minimumTimeWeight)
+			weightUnit := math.LegacyZeroDec().Sub(minimumTimeWeight)
 
 			// if zero, it would divide by zero
-			if !period.Equal(sdk.ZeroDec()) {
+			if !period.Equal(math.LegacyZeroDec()) {
 				weightUnit = weightUnit.Quo(period)
 			}
 
@@ -117,7 +116,7 @@ func ComputeTVWAP(prices provider.AggregatedProviderCandles) (map[string]sdk.Dec
 				// we only want candles within the last timePeriod
 				if timePeriod < candle.TimeStamp {
 					// timeDiff = now - candle.TimeStamp
-					timeDiff := sdk.NewDec(now - candle.TimeStamp)
+					timeDiff := math.LegacyNewDec(now - candle.TimeStamp)
 					// volume = candle.Volume * (weightUnit * (period - timeDiff) + minimumTimeWeight)
 					volume := candle.Volume.Mul(
 						weightUnit.Mul(period.Sub(timeDiff).Add(minimumTimeWeight)),
@@ -136,22 +135,22 @@ func ComputeTVWAP(prices provider.AggregatedProviderCandles) (map[string]sdk.Dec
 // StandardDeviation returns maps of the standard deviations and means of assets.
 // Will skip calculating for an asset if there are less than 3 prices.
 func StandardDeviation(
-	prices map[string]map[string]sdk.Dec,
-) (map[string]sdk.Dec, map[string]sdk.Dec, error) {
+	prices map[string]map[string]math.LegacyDec,
+) (map[string]math.LegacyDec, map[string]math.LegacyDec, error) {
 	var (
-		deviations = make(map[string]sdk.Dec)
-		means      = make(map[string]sdk.Dec)
-		priceSlice = make(map[string][]sdk.Dec)
-		priceSums  = make(map[string]sdk.Dec)
+		deviations = make(map[string]math.LegacyDec)
+		means      = make(map[string]math.LegacyDec)
+		priceSlice = make(map[string][]math.LegacyDec)
+		priceSums  = make(map[string]math.LegacyDec)
 	)
 
 	for _, providerPrices := range prices {
 		for base, p := range providerPrices {
 			if _, ok := priceSums[base]; !ok {
-				priceSums[base] = sdk.ZeroDec()
+				priceSums[base] = math.LegacyZeroDec()
 			}
 			if _, ok := priceSlice[base]; !ok {
-				priceSlice[base] = []sdk.Dec{}
+				priceSlice[base] = []math.LegacyDec{}
 			}
 
 			priceSums[base] = priceSums[base].Add(p)
@@ -165,15 +164,15 @@ func StandardDeviation(
 			continue
 		}
 		if _, ok := deviations[base]; !ok {
-			deviations[base] = sdk.ZeroDec()
+			deviations[base] = math.LegacyZeroDec()
 		}
 		if _, ok := means[base]; !ok {
-			means[base] = sdk.ZeroDec()
+			means[base] = math.LegacyZeroDec()
 		}
 
 		numPrices := int64(len(priceSlice[base]))
 		means[base] = sum.QuoInt64(numPrices)
-		varianceSum := sdk.ZeroDec()
+		varianceSum := math.LegacyZeroDec()
 
 		for _, price := range priceSlice[base] {
 			deviation := price.Sub(means[base])
@@ -184,7 +183,7 @@ func StandardDeviation(
 
 		standardDeviation, err := variance.ApproxSqrt()
 		if err != nil {
-			return make(map[string]sdk.Dec), make(map[string]sdk.Dec), err
+			return make(map[string]math.LegacyDec), make(map[string]math.LegacyDec), err
 		}
 
 		deviations[base] = standardDeviation

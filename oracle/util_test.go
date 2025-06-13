@@ -3,63 +3,63 @@ package oracle
 import (
 	"testing"
 
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/provider"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestComputeVWAP(t *testing.T) {
 	testCases := map[string]struct {
 		prices   map[string]map[string]provider.TickerPrice
-		expected map[string]sdk.Dec
+		expected map[string]math.LegacyDec
 	}{
 		"empty prices": {
 			prices:   make(map[string]map[string]provider.TickerPrice),
-			expected: make(map[string]sdk.Dec),
+			expected: make(map[string]math.LegacyDec),
 		},
 		"nil prices": {
 			prices:   nil,
-			expected: make(map[string]sdk.Dec),
+			expected: make(map[string]math.LegacyDec),
 		},
 		"non empty prices": {
 			prices: map[string]map[string]provider.TickerPrice{
 				config.ProviderBinance: {
 					"ATOM": provider.TickerPrice{
-						Price:  sdk.MustNewDecFromStr("28.21000000"),
-						Volume: sdk.MustNewDecFromStr("2749102.78000000"),
+						Price:  math.LegacyMustNewDecFromStr("28.21000000"),
+						Volume: math.LegacyMustNewDecFromStr("2749102.78000000"),
 					},
 					"UMEE": provider.TickerPrice{
-						Price:  sdk.MustNewDecFromStr("1.13000000"),
-						Volume: sdk.MustNewDecFromStr("249102.38000000"),
+						Price:  math.LegacyMustNewDecFromStr("1.13000000"),
+						Volume: math.LegacyMustNewDecFromStr("249102.38000000"),
 					},
 					"KII": provider.TickerPrice{
-						Price:  sdk.MustNewDecFromStr("64.87000000"),
-						Volume: sdk.MustNewDecFromStr("7854934.69000000"),
+						Price:  math.LegacyMustNewDecFromStr("64.87000000"),
+						Volume: math.LegacyMustNewDecFromStr("7854934.69000000"),
 					},
 				},
 				config.ProviderKraken: {
 					"ATOM": provider.TickerPrice{
-						Price:  sdk.MustNewDecFromStr("28.268700"),
-						Volume: sdk.MustNewDecFromStr("178277.53314385"),
+						Price:  math.LegacyMustNewDecFromStr("28.268700"),
+						Volume: math.LegacyMustNewDecFromStr("178277.53314385"),
 					},
 					"KII": provider.TickerPrice{
-						Price:  sdk.MustNewDecFromStr("64.87853000"),
-						Volume: sdk.MustNewDecFromStr("458917.46353577"),
+						Price:  math.LegacyMustNewDecFromStr("64.87853000"),
+						Volume: math.LegacyMustNewDecFromStr("458917.46353577"),
 					},
 				},
 				"FOO": {
 					"ATOM": provider.TickerPrice{
-						Price:  sdk.MustNewDecFromStr("28.168700"),
-						Volume: sdk.MustNewDecFromStr("4749102.53314385"),
+						Price:  math.LegacyMustNewDecFromStr("28.168700"),
+						Volume: math.LegacyMustNewDecFromStr("4749102.53314385"),
 					},
 				},
 			},
-			expected: map[string]sdk.Dec{
-				"ATOM": sdk.MustNewDecFromStr("28.185812745610043621"),
-				"UMEE": sdk.MustNewDecFromStr("1.13000000"),
-				"KII":  sdk.MustNewDecFromStr("64.870470848638112395"),
+			expected: map[string]math.LegacyDec{
+				"ATOM": math.LegacyMustNewDecFromStr("28.185812745610043621"),
+				"UMEE": math.LegacyMustNewDecFromStr("1.13000000"),
+				"KII":  math.LegacyMustNewDecFromStr("64.870470848638112395"),
 			},
 		},
 	}
@@ -84,35 +84,35 @@ func TestComputeTVWAP(t *testing.T) {
 	testCases := []struct {
 		name     string
 		prices   provider.AggregatedProviderCandles
-		expected map[string]sdk.Dec
+		expected map[string]math.LegacyDec
 		now      int64
 	}{
 		{
 			name:     "empty candles",
 			prices:   make(provider.AggregatedProviderCandles),
-			expected: make(map[string]sdk.Dec),
+			expected: make(map[string]math.LegacyDec),
 		},
 		{
 			name:     "nil candles",
 			prices:   nil,
-			expected: make(map[string]sdk.Dec),
+			expected: make(map[string]math.LegacyDec),
 		},
 		{
 			name: "non-empty candles",
 			prices: provider.AggregatedProviderCandles{
 				config.ProviderBinance: {
 					"ATOM": []provider.CandlePrice{
-						{TimeStamp: provider.PastUnixTime(600), Price: sdk.MustNewDecFromStr("28.21000000"), Volume: sdk.MustNewDecFromStr("1000")},
-						{TimeStamp: provider.PastUnixTime(300), Price: sdk.MustNewDecFromStr("28.23000000"), Volume: sdk.MustNewDecFromStr("1000")},
+						{TimeStamp: provider.PastUnixTime(600), Price: math.LegacyMustNewDecFromStr("28.21000000"), Volume: math.LegacyMustNewDecFromStr("1000")},
+						{TimeStamp: provider.PastUnixTime(300), Price: math.LegacyMustNewDecFromStr("28.23000000"), Volume: math.LegacyMustNewDecFromStr("1000")},
 					},
 					"UMEE": []provider.CandlePrice{
-						{TimeStamp: provider.PastUnixTime(600), Price: sdk.MustNewDecFromStr("1.13000000"), Volume: sdk.MustNewDecFromStr("500")},
+						{TimeStamp: provider.PastUnixTime(600), Price: math.LegacyMustNewDecFromStr("1.13000000"), Volume: math.LegacyMustNewDecFromStr("500")},
 					},
 				},
 			},
-			expected: map[string]sdk.Dec{
-				"ATOM": sdk.MustNewDecFromStr("28.22000000"), // Adjust this after checking the expected result of TVWAP
-				"UMEE": sdk.MustNewDecFromStr("1.13000000"),
+			expected: map[string]math.LegacyDec{
+				"ATOM": math.LegacyMustNewDecFromStr("28.22000000"), // Adjust this after checking the expected result of TVWAP
+				"UMEE": math.LegacyMustNewDecFromStr("1.13000000"),
 			},
 		},
 		{
@@ -120,17 +120,17 @@ func TestComputeTVWAP(t *testing.T) {
 			prices: provider.AggregatedProviderCandles{
 				config.ProviderBinance: {
 					"ATOM": []provider.CandlePrice{
-						{TimeStamp: provider.PastUnixTime(600), Price: sdk.MustNewDecFromStr("28.21000000"), Volume: sdk.MustNewDecFromStr("1000")},
-						{TimeStamp: provider.PastUnixTime(300), Price: sdk.MustNewDecFromStr("28.23000000"), Volume: sdk.MustNewDecFromStr("1000")},
+						{TimeStamp: provider.PastUnixTime(600), Price: math.LegacyMustNewDecFromStr("28.21000000"), Volume: math.LegacyMustNewDecFromStr("1000")},
+						{TimeStamp: provider.PastUnixTime(300), Price: math.LegacyMustNewDecFromStr("28.23000000"), Volume: math.LegacyMustNewDecFromStr("1000")},
 					},
 					"UMEE": []provider.CandlePrice{
-						{TimeStamp: provider.PastUnixTime(600), Price: sdk.MustNewDecFromStr("1.13000000"), Volume: sdk.MustNewDecFromStr("500")},
+						{TimeStamp: provider.PastUnixTime(600), Price: math.LegacyMustNewDecFromStr("1.13000000"), Volume: math.LegacyMustNewDecFromStr("500")},
 					},
 				},
 			},
-			expected: map[string]sdk.Dec{
-				"ATOM": sdk.MustNewDecFromStr("28.22000000"),
-				"UMEE": sdk.MustNewDecFromStr("1.13000000"),
+			expected: map[string]math.LegacyDec{
+				"ATOM": math.LegacyMustNewDecFromStr("28.22000000"),
+				"UMEE": math.LegacyMustNewDecFromStr("1.13000000"),
 			},
 		},
 		{
@@ -139,16 +139,16 @@ func TestComputeTVWAP(t *testing.T) {
 			prices: provider.AggregatedProviderCandles{
 				config.ProviderBinance: {
 					"ATOM": []provider.CandlePrice{
-						{TimeStamp: now, Price: sdk.MustNewDecFromStr("28.50000000"), Volume: sdk.MustNewDecFromStr("1000")},
+						{TimeStamp: now, Price: math.LegacyMustNewDecFromStr("28.50000000"), Volume: math.LegacyMustNewDecFromStr("1000")},
 					},
 					"UMEE": []provider.CandlePrice{
-						{TimeStamp: now, Price: sdk.MustNewDecFromStr("1.25000000"), Volume: sdk.MustNewDecFromStr("500")},
+						{TimeStamp: now, Price: math.LegacyMustNewDecFromStr("1.25000000"), Volume: math.LegacyMustNewDecFromStr("500")},
 					},
 				},
 			},
-			expected: map[string]sdk.Dec{
-				"ATOM": sdk.MustNewDecFromStr("28.50000000"),
-				"UMEE": sdk.MustNewDecFromStr("1.25000000"),
+			expected: map[string]math.LegacyDec{
+				"ATOM": math.LegacyMustNewDecFromStr("28.50000000"),
+				"UMEE": math.LegacyMustNewDecFromStr("1.25000000"),
 			},
 		},
 	}
@@ -173,15 +173,15 @@ func TestComputeTVWAP(t *testing.T) {
 
 func TestStandardDeviation(t *testing.T) {
 	type deviation struct {
-		mean      sdk.Dec
-		deviation sdk.Dec
+		mean      math.LegacyDec
+		deviation math.LegacyDec
 	}
 	testCases := map[string]struct {
-		prices   map[string]map[string]sdk.Dec
+		prices   map[string]map[string]math.LegacyDec
 		expected map[string]deviation
 	}{
 		"empty prices": {
-			prices:   make(map[string]map[string]sdk.Dec),
+			prices:   make(map[string]map[string]math.LegacyDec),
 			expected: map[string]deviation{},
 		},
 		"nil prices": {
@@ -189,80 +189,80 @@ func TestStandardDeviation(t *testing.T) {
 			expected: map[string]deviation{},
 		},
 		"not enough prices": {
-			prices: map[string]map[string]sdk.Dec{
+			prices: map[string]map[string]math.LegacyDec{
 				config.ProviderBinance: {
-					"ATOM": sdk.MustNewDecFromStr("28.21000000"),
-					"UMEE": sdk.MustNewDecFromStr("1.13000000"),
-					"KII":  sdk.MustNewDecFromStr("64.87000000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.21000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.13000000"),
+					"KII":  math.LegacyMustNewDecFromStr("64.87000000"),
 				},
 				config.ProviderKraken: {
-					"ATOM": sdk.MustNewDecFromStr("28.23000000"),
-					"UMEE": sdk.MustNewDecFromStr("1.13050000"),
-					"KII":  sdk.MustNewDecFromStr("64.85000000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.23000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.13050000"),
+					"KII":  math.LegacyMustNewDecFromStr("64.85000000"),
 				},
 			},
 			expected: map[string]deviation{},
 		},
 		"some prices": {
-			prices: map[string]map[string]sdk.Dec{
+			prices: map[string]map[string]math.LegacyDec{
 				config.ProviderBinance: {
-					"ATOM": sdk.MustNewDecFromStr("28.21000000"),
-					"UMEE": sdk.MustNewDecFromStr("1.13000000"),
-					"KII":  sdk.MustNewDecFromStr("64.87000000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.21000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.13000000"),
+					"KII":  math.LegacyMustNewDecFromStr("64.87000000"),
 				},
 				config.ProviderKraken: {
-					"ATOM": sdk.MustNewDecFromStr("28.23000000"),
-					"UMEE": sdk.MustNewDecFromStr("1.13050000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.23000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.13050000"),
 				},
 				config.ProviderCoinbase: {
-					"ATOM": sdk.MustNewDecFromStr("28.40000000"),
-					"UMEE": sdk.MustNewDecFromStr("1.14000000"),
-					"KII":  sdk.MustNewDecFromStr("64.10000000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.40000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.14000000"),
+					"KII":  math.LegacyMustNewDecFromStr("64.10000000"),
 				},
 			},
 			expected: map[string]deviation{
 				"ATOM": {
-					mean:      sdk.MustNewDecFromStr("28.28"),
-					deviation: sdk.MustNewDecFromStr("0.085244745683629475"),
+					mean:      math.LegacyMustNewDecFromStr("28.28"),
+					deviation: math.LegacyMustNewDecFromStr("0.085244745683629475"),
 				},
 				"UMEE": {
-					mean:      sdk.MustNewDecFromStr("1.1335"),
-					deviation: sdk.MustNewDecFromStr("0.004600724580614015"),
+					mean:      math.LegacyMustNewDecFromStr("1.1335"),
+					deviation: math.LegacyMustNewDecFromStr("0.004600724580614015"),
 				},
 			},
 		},
 
 		"non empty prices": {
-			prices: map[string]map[string]sdk.Dec{
+			prices: map[string]map[string]math.LegacyDec{
 				config.ProviderBinance: {
-					"ATOM": sdk.MustNewDecFromStr("28.21000000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.21000000"),
 
-					"UMEE": sdk.MustNewDecFromStr("1.13000000"),
-					"KII":  sdk.MustNewDecFromStr("64.87000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.13000000"),
+					"KII":  math.LegacyMustNewDecFromStr("64.87000000"),
 				},
 				config.ProviderKraken: {
-					"ATOM": sdk.MustNewDecFromStr("28.23000000"),
-					"UMEE": sdk.MustNewDecFromStr("1.13050000"),
-					"KII":  sdk.MustNewDecFromStr("64.85000000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.23000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.13050000"),
+					"KII":  math.LegacyMustNewDecFromStr("64.85000000"),
 				},
 				config.ProviderCoinbase: {
-					"ATOM": sdk.MustNewDecFromStr("28.40000000"),
-					"UMEE": sdk.MustNewDecFromStr("1.14000000"),
-					"KII":  sdk.MustNewDecFromStr("64.10000000"),
+					"ATOM": math.LegacyMustNewDecFromStr("28.40000000"),
+					"UMEE": math.LegacyMustNewDecFromStr("1.14000000"),
+					"KII":  math.LegacyMustNewDecFromStr("64.10000000"),
 				},
 			},
 			expected: map[string]deviation{
 				"ATOM": {
-					mean:      sdk.MustNewDecFromStr("28.28"),
-					deviation: sdk.MustNewDecFromStr("0.085244745683629475"),
+					mean:      math.LegacyMustNewDecFromStr("28.28"),
+					deviation: math.LegacyMustNewDecFromStr("0.085244745683629475"),
 				},
 				"UMEE": {
-					mean:      sdk.MustNewDecFromStr("1.1335"),
-					deviation: sdk.MustNewDecFromStr("0.004600724580614015"),
+					mean:      math.LegacyMustNewDecFromStr("1.1335"),
+					deviation: math.LegacyMustNewDecFromStr("0.004600724580614015"),
 				},
 				"KII": {
-					mean:      sdk.MustNewDecFromStr("64.606666666666666666"),
-					deviation: sdk.MustNewDecFromStr("0.358360464089193609"),
+					mean:      math.LegacyMustNewDecFromStr("64.606666666666666666"),
+					deviation: math.LegacyMustNewDecFromStr("0.358360464089193609"),
 				},
 			},
 		},

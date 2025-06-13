@@ -4,20 +4,20 @@ import (
 	"testing"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/provider"
 	"github.com/kiichain/price-feeder/oracle/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	atomPrice  = sdk.MustNewDecFromStr("29.93")
-	atomVolume = sdk.MustNewDecFromStr("894123.00")
-	usdtPrice  = sdk.MustNewDecFromStr("0.98")
-	usdtVolume = sdk.MustNewDecFromStr("894123.00")
+	atomPrice  = math.LegacyMustNewDecFromStr("29.93")
+	atomVolume = math.LegacyMustNewDecFromStr("894123.00")
+	usdtPrice  = math.LegacyMustNewDecFromStr("0.98")
+	usdtVolume = math.LegacyMustNewDecFromStr("894123.00")
 
 	atomPair = types.CurrencyPair{
 		Base:  "ATOM",
@@ -105,7 +105,7 @@ func TestConvertCandlesToUSD(t *testing.T) {
 		zerolog.Nop(),
 		providerCandles,
 		providerPairs,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 	)
 	require.NoError(t, err)
 
@@ -148,7 +148,7 @@ func TestConvertCandlesToUSDFiltering(t *testing.T) {
 
 	okxCandles := map[string][]provider.CandlePrice{
 		"USDT": {{
-			Price:     sdk.MustNewDecFromStr("100.0"),
+			Price:     math.LegacyMustNewDecFromStr("100.0"),
 			Volume:    usdtVolume,
 			TimeStamp: provider.PastUnixTime(1 * time.Minute),
 		}},
@@ -166,7 +166,7 @@ func TestConvertCandlesToUSDFiltering(t *testing.T) {
 		zerolog.Nop(),
 		providerCandles,
 		providerPairs,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 	)
 	require.NoError(t, err)
 
@@ -205,7 +205,7 @@ func TestConvertTickersToUSD(t *testing.T) {
 		zerolog.Nop(),
 		providerPrices,
 		providerPairs,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 	)
 	require.NoError(t, err)
 
@@ -242,7 +242,7 @@ func TestConvertTickersToUSDFiltering(t *testing.T) {
 
 	huobiTicker := map[string]provider.TickerPrice{
 		"USDT": {
-			Price:  sdk.MustNewDecFromStr("10000"),
+			Price:  math.LegacyMustNewDecFromStr("10000"),
 			Volume: usdtVolume,
 		},
 	}
@@ -259,7 +259,7 @@ func TestConvertTickersToUSDFiltering(t *testing.T) {
 		zerolog.Nop(),
 		providerPrices,
 		providerPairs,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 	)
 	require.NoError(t, err)
 

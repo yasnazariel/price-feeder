@@ -7,10 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/armon/go-metrics"
+	"cosmossdk.io/math"
 	sdkclient "github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/hashicorp/go-metrics"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -195,7 +196,7 @@ func (ots *OracleTestSuite) SetupSuite() {
 			},
 		},
 		time.Millisecond*100,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 		make(map[string]config.ProviderEndpoint),
 		[]config.Healthchecks{
 			{URL: "https://hc-ping.com/HEALTHCHECK-UUID", Timeout: "200ms"},
@@ -241,16 +242,16 @@ func (ots *OracleTestSuite) TestPrices() {
 		config.ProviderBinance: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDX": {
-					Price:  sdk.MustNewDecFromStr("3.72"),
-					Volume: sdk.MustNewDecFromStr("2396974.02000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.72"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.02000000"),
 				},
 			},
 		},
 		config.ProviderKraken: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDX": {
-					Price:  sdk.MustNewDecFromStr("3.70"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.70"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
@@ -276,16 +277,16 @@ func (ots *OracleTestSuite) TestPrices() {
 		config.ProviderBinance: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDT": {
-					Price:  sdk.MustNewDecFromStr("3.72"),
-					Volume: sdk.MustNewDecFromStr("2396974.02000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.72"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.02000000"),
 				},
 			},
 		},
 		config.ProviderKraken: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDC": {
-					Price:  sdk.MustNewDecFromStr("3.70"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.70"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
@@ -308,40 +309,40 @@ func (ots *OracleTestSuite) TestPrices() {
 		config.ProviderBinance: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDT": {
-					Price:  sdk.MustNewDecFromStr("3.72"),
-					Volume: sdk.MustNewDecFromStr("2396974.02000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.72"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.02000000"),
 				},
 			},
 		},
 		config.ProviderKraken: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDC": {
-					Price:  sdk.MustNewDecFromStr("3.70"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.70"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
 		config.ProviderHuobi: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDCUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("2396974.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.34000000"),
 				},
 			},
 		},
 		config.ProviderCoinbase: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDTUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
 		config.ProviderOkx: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"XBTUSDT": {
-					Price:  sdk.MustNewDecFromStr("3.717"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.717"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
@@ -353,50 +354,50 @@ func (ots *OracleTestSuite) TestPrices() {
 
 	prices = ots.oracle.GetPrices()
 	ots.Require().Len(prices, 4)
-	ots.Require().Equal(sdk.MustNewDecFromStr("3.710916056220858266"), prices.AmountOf("uumee"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("3.717"), prices.AmountOf("uxbt"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdc"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdt"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("3.710916056220858266"), prices.AmountOf("uumee"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("3.717"), prices.AmountOf("uxbt"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdc"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdt"))
 
 	// use one working provider and one provider with an incorrect exchange rate
 	ots.oracle.priceProviders = map[string]provider.Provider{
 		config.ProviderBinance: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDX": {
-					Price:  sdk.MustNewDecFromStr("3.72"),
-					Volume: sdk.MustNewDecFromStr("2396974.02000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.72"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.02000000"),
 				},
 			},
 		},
 		config.ProviderKraken: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDC": {
-					Price:  sdk.MustNewDecFromStr("3.70"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.70"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
 		config.ProviderHuobi: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDCUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("2396974.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.34000000"),
 				},
 			},
 		},
 		config.ProviderCoinbase: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDTUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
 		config.ProviderOkx: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"XBTUSDT": {
-					Price:  sdk.MustNewDecFromStr("3.717"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.717"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
@@ -410,26 +411,26 @@ func (ots *OracleTestSuite) TestPrices() {
 
 	prices = ots.oracle.GetPrices()
 	ots.Require().Len(prices, 4)
-	ots.Require().Equal(sdk.MustNewDecFromStr("3.70"), prices.AmountOf("uumee"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("3.717"), prices.AmountOf("uxbt"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdc"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdt"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("3.70"), prices.AmountOf("uumee"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("3.717"), prices.AmountOf("uxbt"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdc"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdt"))
 
 	// use one working provider and one provider that fails
 	ots.oracle.priceProviders = map[string]provider.Provider{
 		config.ProviderBinance: failingProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDC": {
-					Price:  sdk.MustNewDecFromStr("3.72"),
-					Volume: sdk.MustNewDecFromStr("2396974.02000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.72"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.02000000"),
 				},
 			},
 		},
 		config.ProviderKraken: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDC": {
-					Price:  sdk.MustNewDecFromStr("3.71"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.71"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 			candleErr: fmt.Errorf("test error"),
@@ -437,24 +438,24 @@ func (ots *OracleTestSuite) TestPrices() {
 		config.ProviderHuobi: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDCUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("2396974.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.34000000"),
 				},
 			},
 		},
 		config.ProviderCoinbase: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDTUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
 		config.ProviderOkx: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"XBTUSDT": {
-					Price:  sdk.MustNewDecFromStr("3.717"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.717"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
@@ -468,10 +469,10 @@ func (ots *OracleTestSuite) TestPrices() {
 
 	prices = ots.oracle.GetPrices()
 	ots.Require().Len(prices, 4)
-	ots.Require().Equal(sdk.MustNewDecFromStr("3.71"), prices.AmountOf("uumee"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("3.717"), prices.AmountOf("uxbt"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdc"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdt"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("3.71"), prices.AmountOf("uumee"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("3.717"), prices.AmountOf("uxbt"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdc"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdt"))
 
 	// if a provider never initialized correctly, verify it doesn't prevent future updates
 	ots.oracle.failedProviders = map[string]error{
@@ -482,32 +483,32 @@ func (ots *OracleTestSuite) TestPrices() {
 		config.ProviderBinance: failingProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDC": {
-					Price:  sdk.MustNewDecFromStr("3.72"),
-					Volume: sdk.MustNewDecFromStr("2396974.02000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.72"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.02000000"),
 				},
 			},
 		},
 		config.ProviderKraken: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"UMEEUSDC": {
-					Price:  sdk.MustNewDecFromStr("3.71"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("3.71"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
 		config.ProviderHuobi: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDCUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("2396974.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("2396974.34000000"),
 				},
 			},
 		},
 		config.ProviderCoinbase: mockProvider{
 			prices: map[string]provider.TickerPrice{
 				"USDTUSD": {
-					Price:  sdk.MustNewDecFromStr("1"),
-					Volume: sdk.MustNewDecFromStr("1994674.34000000"),
+					Price:  math.LegacyMustNewDecFromStr("1"),
+					Volume: math.LegacyMustNewDecFromStr("1994674.34000000"),
 				},
 			},
 		},
@@ -522,9 +523,9 @@ func (ots *OracleTestSuite) TestPrices() {
 
 	prices = ots.oracle.GetPrices()
 	ots.Require().Len(prices, 3)
-	ots.Require().Equal(sdk.MustNewDecFromStr("3.71"), prices.AmountOf("uumee"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdc"))
-	ots.Require().Equal(sdk.MustNewDecFromStr("1"), prices.AmountOf("uusdt"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("3.71"), prices.AmountOf("uumee"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdc"))
+	ots.Require().Equal(math.LegacyMustNewDecFromStr("1"), prices.AmountOf("uusdt"))
 }
 
 func denomList(names ...string) oracletypes.DenomList {
@@ -555,7 +556,7 @@ func TestTickScenarios(t *testing.T) {
 	tests := []struct {
 		name               string
 		isJailed           bool
-		prices             map[string]sdk.Dec
+		prices             map[string]math.LegacyDec
 		pairs              []config.CurrencyPair
 		whitelist          oracletypes.DenomList
 		blockHeight        int64
@@ -578,10 +579,10 @@ func TestTickScenarios(t *testing.T) {
 				{Base: "BTC", ChainDenom: "ubtc", Quote: "USD"},
 				{Base: "ETH", ChainDenom: "ueth", Quote: "USD"},
 			},
-			prices: map[string]sdk.Dec{
-				"USDT": sdk.MustNewDecFromStr("1.1"),
-				"BTC":  sdk.MustNewDecFromStr("2.2"),
-				"ETH":  sdk.MustNewDecFromStr("3.3"),
+			prices: map[string]math.LegacyDec{
+				"USDT": math.LegacyMustNewDecFromStr("1.1"),
+				"BTC":  math.LegacyMustNewDecFromStr("2.2"),
+				"ETH":  math.LegacyMustNewDecFromStr("3.3"),
 			},
 			whitelist: denomList("uusdt", "ubtc", "ueth"),
 			expectedVoteMsg: &oracletypes.MsgAggregateExchangeRateVote{
@@ -601,10 +602,10 @@ func TestTickScenarios(t *testing.T) {
 				{Base: "BTC", ChainDenom: "ubtc", Quote: "USD"},
 				{Base: "OTHER", ChainDenom: "uother", Quote: "USD"}, // filtered out
 			},
-			prices: map[string]sdk.Dec{
-				"USDT":  sdk.MustNewDecFromStr("1.1"),
-				"BTC":   sdk.MustNewDecFromStr("2.2"),
-				"OTHER": sdk.MustNewDecFromStr("3.3"),
+			prices: map[string]math.LegacyDec{
+				"USDT":  math.LegacyMustNewDecFromStr("1.1"),
+				"BTC":   math.LegacyMustNewDecFromStr("2.2"),
+				"OTHER": math.LegacyMustNewDecFromStr("3.3"),
 			},
 			whitelist: denomList("uusdt", "ubtc"),
 			expectedVoteMsg: &oracletypes.MsgAggregateExchangeRateVote{
@@ -624,10 +625,10 @@ func TestTickScenarios(t *testing.T) {
 				{Base: "BTC", ChainDenom: "ubtc", Quote: "USD"},
 				{Base: "ETH", ChainDenom: "ueth", Quote: "USD"},
 			},
-			prices: map[string]sdk.Dec{
-				"USDT": sdk.MustNewDecFromStr("1.1"),
-				"BTC":  sdk.MustNewDecFromStr("2.2"),
-				"ETH":  sdk.MustNewDecFromStr("3.3"),
+			prices: map[string]math.LegacyDec{
+				"USDT": math.LegacyMustNewDecFromStr("1.1"),
+				"BTC":  math.LegacyMustNewDecFromStr("2.2"),
+				"ETH":  math.LegacyMustNewDecFromStr("3.3"),
 			},
 			whitelist: denomList("uusdt", "ubtc", "ueth"),
 			expectedVoteMsg: &oracletypes.MsgAggregateExchangeRateVote{
@@ -744,21 +745,21 @@ func TestFilterPricesWithDenomList(t *testing.T) {
 		{
 			name: "Matching denominations",
 			inputDC: sdk.NewDecCoins(
-				sdk.NewDecCoin("usdt", sdk.NewInt(100)),
-				sdk.NewDecCoin("eth", sdk.NewInt(5)),
+				sdk.NewDecCoin("usdt", math.NewInt(100)),
+				sdk.NewDecCoin("eth", math.NewInt(5)),
 			),
 			inputDL: oracletypes.DenomList{
 				{Name: "usdt"},
 			},
 			expectedResult: sdk.NewDecCoins(
-				sdk.NewDecCoin("usdt", sdk.NewInt(100)),
+				sdk.NewDecCoin("usdt", math.NewInt(100)),
 			),
 		},
 		{
 			name: "No matching denominations",
 			inputDC: sdk.NewDecCoins(
-				sdk.NewDecCoin("btc", sdk.NewInt(1)),
-				sdk.NewDecCoin("eth", sdk.NewInt(10)),
+				sdk.NewDecCoin("btc", math.NewInt(1)),
+				sdk.NewDecCoin("eth", math.NewInt(10)),
 			),
 			inputDL: oracletypes.DenomList{
 				{Name: "usdt"},
@@ -782,8 +783,8 @@ func TestFilterPricesWithDenomList(t *testing.T) {
 		{
 			name: "Empty input DenomList",
 			inputDC: sdk.NewDecCoins(
-				sdk.NewDecCoin("usdt", sdk.NewInt(100)),
-				sdk.NewDecCoin("eth", sdk.NewInt(5)),
+				sdk.NewDecCoin("usdt", math.NewInt(100)),
+				sdk.NewDecCoin("eth", math.NewInt(5)),
 			),
 			inputDL:        oracletypes.DenomList{},
 			expectedResult: sdk.NewDecCoins(),
@@ -808,13 +809,13 @@ func TestGenerateExchangeRatesString(t *testing.T) {
 			expected: "",
 		},
 		"single denom": {
-			input:    sdk.NewDecCoins(sdk.NewDecCoinFromDec("UMEE", sdk.MustNewDecFromStr("3.72"))),
+			input:    sdk.NewDecCoins(sdk.NewDecCoinFromDec("UMEE", math.LegacyMustNewDecFromStr("3.72"))),
 			expected: "3.720000000000000000UMEE",
 		},
 		"multi denom": {
-			input: sdk.NewDecCoins(sdk.NewDecCoinFromDec("UMEE", sdk.MustNewDecFromStr("3.72")),
-				sdk.NewDecCoinFromDec("ATOM", sdk.MustNewDecFromStr("40.13")),
-				sdk.NewDecCoinFromDec("OSMO", sdk.MustNewDecFromStr("8.69")),
+			input: sdk.NewDecCoins(sdk.NewDecCoinFromDec("UMEE", math.LegacyMustNewDecFromStr("3.72")),
+				sdk.NewDecCoinFromDec("ATOM", math.LegacyMustNewDecFromStr("40.13")),
+				sdk.NewDecCoinFromDec("OSMO", math.LegacyMustNewDecFromStr("8.69")),
 			),
 			expected: "40.130000000000000000ATOM,8.690000000000000000OSMO,3.720000000000000000UMEE",
 		},
@@ -838,8 +839,8 @@ func TestSuccessSetProviderTickerPricesAndCandles(t *testing.T) {
 		Quote: "USDT",
 	}
 
-	atomPrice := sdk.MustNewDecFromStr("29.93")
-	atomVolume := sdk.MustNewDecFromStr("894123.00")
+	atomPrice := math.LegacyMustNewDecFromStr("29.93")
+	atomVolume := math.LegacyMustNewDecFromStr("894123.00")
 
 	prices := make(map[string]provider.TickerPrice, 1)
 	prices[pair.String()] = provider.TickerPrice{
@@ -893,8 +894,8 @@ func TestSuccessGetComputedPricesCandles(t *testing.T) {
 		Quote: "USD",
 	}
 
-	atomPrice := sdk.MustNewDecFromStr("29.93")
-	atomVolume := sdk.MustNewDecFromStr("894123.00")
+	atomPrice := math.LegacyMustNewDecFromStr("29.93")
+	atomVolume := math.LegacyMustNewDecFromStr("894123.00")
 
 	candles := make(map[string][]provider.CandlePrice, 1)
 	candles[pair.Base] = []provider.CandlePrice{
@@ -915,7 +916,7 @@ func TestSuccessGetComputedPricesCandles(t *testing.T) {
 		providerCandles,
 		make(provider.AggregatedProviderPrices, 1),
 		providerPair,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 		map[string]struct{}{
 			"ATOM": {},
 		},
@@ -932,8 +933,8 @@ func TestSuccessGetComputedPricesTickers(t *testing.T) {
 		Quote: "USD",
 	}
 
-	atomPrice := sdk.MustNewDecFromStr("29.93")
-	atomVolume := sdk.MustNewDecFromStr("894123.00")
+	atomPrice := math.LegacyMustNewDecFromStr("29.93")
+	atomVolume := math.LegacyMustNewDecFromStr("894123.00")
 
 	tickerPrices := make(map[string]provider.TickerPrice, 1)
 	tickerPrices[pair.Base] = provider.TickerPrice{
@@ -951,7 +952,7 @@ func TestSuccessGetComputedPricesTickers(t *testing.T) {
 		make(provider.AggregatedProviderCandles, 1),
 		providerPrices,
 		providerPair,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 		map[string]struct{}{
 			"ATOM": {},
 		},
@@ -974,10 +975,10 @@ func TestGetComputedPricesCandlesConversion(t *testing.T) {
 		Base:  "ETH",
 		Quote: "USD",
 	}
-	btcEthPrice := sdk.MustNewDecFromStr("17.55")
-	btcUSDPrice := sdk.MustNewDecFromStr("20962.601")
-	ethUsdPrice := sdk.MustNewDecFromStr("1195.02")
-	volume := sdk.MustNewDecFromStr("894123.00")
+	btcEthPrice := math.LegacyMustNewDecFromStr("17.55")
+	btcUSDPrice := math.LegacyMustNewDecFromStr("20962.601")
+	ethUsdPrice := math.LegacyMustNewDecFromStr("1195.02")
+	volume := math.LegacyMustNewDecFromStr("894123.00")
 	providerCandles := make(provider.AggregatedProviderCandles, 4)
 
 	// normal rates
@@ -1020,7 +1021,7 @@ func TestGetComputedPricesCandlesConversion(t *testing.T) {
 	okxCandles := make(map[string][]provider.CandlePrice, 1)
 	okxCandles[ethPair.Base] = []provider.CandlePrice{
 		{
-			Price:     sdk.MustNewDecFromStr("1.0"),
+			Price:     math.LegacyMustNewDecFromStr("1.0"),
 			Volume:    volume,
 			TimeStamp: provider.PastUnixTime(1 * time.Minute),
 		},
@@ -1050,7 +1051,7 @@ func TestGetComputedPricesCandlesConversion(t *testing.T) {
 		providerCandles,
 		make(provider.AggregatedProviderPrices, 1),
 		providerPair,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 		map[string]struct{}{
 			"BTC": {},
 		},
@@ -1061,7 +1062,7 @@ func TestGetComputedPricesCandlesConversion(t *testing.T) {
 	)
 	require.Equal(t,
 		ethUsdPrice.Mul(
-			btcEthPrice).Add(btcUSDPrice).Quo(sdk.MustNewDecFromStr("2")),
+			btcEthPrice).Add(btcUSDPrice).Quo(math.LegacyMustNewDecFromStr("2")),
 		prices[btcPair.Base],
 	)
 }
@@ -1079,10 +1080,10 @@ func TestGetComputedPricesTickersConversion(t *testing.T) {
 		Base:  "ETH",
 		Quote: "USD",
 	}
-	volume := sdk.MustNewDecFromStr("881272.00")
-	btcEthPrice := sdk.MustNewDecFromStr("72.55")
-	ethUsdPrice := sdk.MustNewDecFromStr("9989.02")
-	btcUSDPrice := sdk.MustNewDecFromStr("724603.401")
+	volume := math.LegacyMustNewDecFromStr("881272.00")
+	btcEthPrice := math.LegacyMustNewDecFromStr("72.55")
+	ethUsdPrice := math.LegacyMustNewDecFromStr("9989.02")
+	btcUSDPrice := math.LegacyMustNewDecFromStr("724603.401")
 	providerPrices := make(provider.AggregatedProviderPrices, 1)
 
 	// normal rates
@@ -1112,7 +1113,7 @@ func TestGetComputedPricesTickersConversion(t *testing.T) {
 	// abnormal eth rate
 	okxTickerPrices := make(map[string]provider.TickerPrice, 1)
 	okxTickerPrices[ethPair.Base] = provider.TickerPrice{
-		Price:  sdk.MustNewDecFromStr("1.0"),
+		Price:  math.LegacyMustNewDecFromStr("1.0"),
 		Volume: volume,
 	}
 	providerPrices[config.ProviderOkx] = okxTickerPrices
@@ -1137,7 +1138,7 @@ func TestGetComputedPricesTickersConversion(t *testing.T) {
 		make(provider.AggregatedProviderCandles, 1),
 		providerPrices,
 		providerPair,
-		make(map[string]sdk.Dec),
+		make(map[string]math.LegacyDec),
 		map[string]struct{}{
 			"BTC": {},
 		},
@@ -1148,7 +1149,7 @@ func TestGetComputedPricesTickersConversion(t *testing.T) {
 	)
 	require.Equal(t,
 		ethUsdPrice.Mul(
-			btcEthPrice).Add(btcUSDPrice).Quo(sdk.MustNewDecFromStr("2")),
+			btcEthPrice).Add(btcUSDPrice).Quo(math.LegacyMustNewDecFromStr("2")),
 		prices[btcPair.Base],
 	)
 }

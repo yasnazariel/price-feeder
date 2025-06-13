@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
+	"cosmossdk.io/math"
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/provider"
 	"github.com/kiichain/price-feeder/oracle/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 )
 
@@ -40,13 +40,13 @@ func convertCandlesToUSD(
 	logger zerolog.Logger,
 	candles provider.AggregatedProviderCandles,
 	providerPairs map[string][]types.CurrencyPair,
-	deviationThresholds map[string]sdk.Dec,
+	deviationThresholds map[string]math.LegacyDec,
 ) (provider.AggregatedProviderCandles, error) {
 	if len(candles) == 0 {
 		return candles, nil
 	}
 
-	conversionRates := make(map[string]sdk.Dec)
+	conversionRates := make(map[string]math.LegacyDec)
 	requiredConversions := make(map[string]types.CurrencyPair)
 
 	for pairProviderName, pairs := range providerPairs {
@@ -124,13 +124,13 @@ func convertTickersToUSD(
 	logger zerolog.Logger,
 	tickers provider.AggregatedProviderPrices,
 	providerPairs map[string][]types.CurrencyPair,
-	deviationThresholds map[string]sdk.Dec,
+	deviationThresholds map[string]math.LegacyDec,
 ) (provider.AggregatedProviderPrices, error) {
 	if len(tickers) == 0 {
 		return tickers, nil
 	}
 
-	conversionRates := make(map[string]sdk.Dec)
+	conversionRates := make(map[string]math.LegacyDec)
 	requiredConversions := make(map[string]types.CurrencyPair)
 
 	for pairProviderName, pairs := range providerPairs {

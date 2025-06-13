@@ -1,9 +1,9 @@
 package oracle
 
 import (
-	"github.com/armon/go-metrics"
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/telemetry"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/hashicorp/go-metrics"
 	"github.com/rs/zerolog"
 
 	"github.com/kiichain/price-feeder/oracle/provider"
@@ -12,24 +12,24 @@ import (
 // defaultDeviationThreshold defines how many 𝜎 a provider can be away
 // from the mean without being considered faulty. This can be overridden
 // in the config.
-var defaultDeviationThreshold = sdk.MustNewDecFromStr("1.0")
+var defaultDeviationThreshold = math.LegacyMustNewDecFromStr("1.0")
 
 // FilterTickerDeviations finds the standard deviations of the prices of
 // all assets, and filters out any providers that are not within 2𝜎 of the mean.
 func FilterTickerDeviations(
 	logger zerolog.Logger,
 	prices provider.AggregatedProviderPrices,
-	deviationThresholds map[string]sdk.Dec,
+	deviationThresholds map[string]math.LegacyDec,
 ) (provider.AggregatedProviderPrices, error) {
 	var (
 		filteredPrices = make(provider.AggregatedProviderPrices)
-		priceMap       = make(map[string]map[string]sdk.Dec)
+		priceMap       = make(map[string]map[string]math.LegacyDec)
 	)
 
 	for providerName, priceTickers := range prices {
 		p, ok := priceMap[providerName]
 		if !ok {
-			p = map[string]sdk.Dec{}
+			p = map[string]math.LegacyDec{}
 			priceMap[providerName] = p
 		}
 		for base, tp := range priceTickers {
@@ -83,11 +83,11 @@ func FilterTickerDeviations(
 func FilterCandleDeviations(
 	logger zerolog.Logger,
 	candles provider.AggregatedProviderCandles,
-	deviationThresholds map[string]sdk.Dec,
+	deviationThresholds map[string]math.LegacyDec,
 ) (provider.AggregatedProviderCandles, error) {
 	var (
 		filteredCandles = make(provider.AggregatedProviderCandles)
-		tvwaps          = make(map[string]map[string]sdk.Dec)
+		tvwaps          = make(map[string]map[string]math.LegacyDec)
 	)
 
 	for providerName, priceCandles := range candles {
@@ -109,7 +109,7 @@ func FilterCandleDeviations(
 
 		for base, asset := range tvwap {
 			if _, ok := tvwaps[providerName]; !ok {
-				tvwaps[providerName] = make(map[string]sdk.Dec)
+				tvwaps[providerName] = make(map[string]math.LegacyDec)
 			}
 
 			tvwaps[providerName][base] = asset
@@ -157,7 +157,7 @@ func FilterCandleDeviations(
 	return filteredCandles, nil
 }
 
-func isBetween(p, mean, margin sdk.Dec) bool {
+func isBetween(p, mean, margin math.LegacyDec) bool {
 	return p.GTE(mean.Sub(margin)) &&
 		p.LTE(mean.Add(margin))
 }
