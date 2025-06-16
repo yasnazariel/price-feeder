@@ -9,16 +9,18 @@ import (
 	"sync"
 	"time"
 
-	sdkmath "cosmossdk.io/math"
-	sdkclient "github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/telemetry"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/hashicorp/go-metrics"
+	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 
-	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
+	sdkmath "cosmossdk.io/math"
+
+	sdkclient "github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/telemetry"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/kiichain/price-feeder/closer"
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/client"
@@ -243,7 +245,7 @@ func (o *Oracle) SetPrices(ctx context.Context) error {
 	providerCandles := make(provider.AggregatedProviderCandles)
 	requiredRates := make(map[string]struct{})
 
-	//iterate over the pairs by provider
+	// iterate over the pairs by provider
 	for providerName, currencyPairs := range o.providerPairs {
 		providerName := providerName
 		currencyPairs := currencyPairs
@@ -502,7 +504,7 @@ func (o *Oracle) getOrSetProvider(ctx context.Context, providerName string) (pro
 		ok            bool
 	)
 
-	//TODO: replace with a exponential backoff mechanism
+	// TODO: replace with a exponential backoff mechanism
 	if err, ok := o.failedProviders[providerName]; ok {
 		return nil, errors.Wrap(err, "failed at first init (skipping provider)")
 	}
@@ -586,8 +588,8 @@ func filterPricesByDenomList(coinPrices sdk.DecCoins, denomList oracletypes.Deno
 func (o *Oracle) tick(
 	ctx context.Context,
 	clientCtx sdkclient.Context,
-	blockHeight int64) error {
-
+	blockHeight int64,
+) error {
 	startTime := time.Now().UTC()
 
 	o.logger.Debug().Msg(fmt.Sprintf("executing oracle tick for height %d", blockHeight))

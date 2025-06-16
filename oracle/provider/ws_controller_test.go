@@ -4,8 +4,9 @@ import (
 	"testing"
 
 	"github.com/gorilla/websocket"
-	"github.com/kiichain/price-feeder/config"
 	"github.com/stretchr/testify/require"
+
+	"github.com/kiichain/price-feeder/config"
 )
 
 type TestProvider struct {

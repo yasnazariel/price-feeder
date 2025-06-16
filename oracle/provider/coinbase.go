@@ -11,14 +11,15 @@ import (
 	"sync"
 	"time"
 
-	"cosmossdk.io/math"
 	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
 
-	"github.com/kiichain/price-feeder/config"
-	"github.com/kiichain/price-feeder/oracle/types"
+	"cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
+
+	"github.com/kiichain/price-feeder/config"
+	"github.com/kiichain/price-feeder/oracle/types"
 )
 
 const (

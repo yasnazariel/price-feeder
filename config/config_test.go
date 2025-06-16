@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/kiichain/price-feeder/config"
-
 	"github.com/stretchr/testify/require"
+
+	"github.com/kiichain/price-feeder/config"
 )
 
 func TestValidate(t *testing.T) {

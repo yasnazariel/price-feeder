@@ -8,8 +8,12 @@ import (
 	"os"
 	"time"
 
+	kiiparams "github.com/kiichain/kiichain/v2/app/params"
+	"github.com/rs/zerolog"
+
 	tmrpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	tmjsonclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
@@ -19,9 +23,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+
 	evmkeyring "github.com/cosmos/evm/crypto/keyring"
-	kiiparams "github.com/kiichain/kiichain/v2/app/params"
-	"github.com/rs/zerolog"
 )
 
 type (
@@ -167,8 +170,8 @@ func (r *passReader) Read(p []byte) (n int, err error) {
 // and we manually increment the sequence number by 1 if the previous broadcastTx succeed.
 func (oc OracleClient) BroadcastTx(
 	clientCtx client.Context,
-	msgs ...sdk.Msg) (*sdk.TxResponse, error) {
-
+	msgs ...sdk.Msg,
+) (*sdk.TxResponse, error) {
 	// this allows for basic mocking without refactoring this to an interface (much larger change)
 	if oc.MockBroadcastTx != nil {
 		return oc.MockBroadcastTx(clientCtx, msgs...)
@@ -229,7 +232,6 @@ func (oc OracleClient) BroadcastTx(
 	// Only increment sequence number if we successfully broadcast the previous transaction
 	txAccountInfo.AccountSequence++
 	return resp, err
-
 }
 
 // CreateClientContext creates an SDK client Context instance used for transaction

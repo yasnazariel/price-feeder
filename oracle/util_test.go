@@ -3,11 +3,12 @@ package oracle
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"cosmossdk.io/math"
+
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/provider"
-
-	"github.com/stretchr/testify/require"
 )
 
 func TestComputeVWAP(t *testing.T) {

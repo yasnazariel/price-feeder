@@ -5,12 +5,13 @@ import (
 	"strconv"
 	"testing"
 
-	"cosmossdk.io/math"
-	"github.com/kiichain/price-feeder/config"
-	"github.com/kiichain/price-feeder/oracle/types"
-
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
+
+	"cosmossdk.io/math"
+
+	"github.com/kiichain/price-feeder/config"
+	"github.com/kiichain/price-feeder/oracle/types"
 )
 
 func TestHuobiProvider_GetTickerPrices(t *testing.T) {

@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rs/zerolog"
+
 	tmrpcclient "github.com/cometbft/cometbft/rpc/client"
 	tmtypes "github.com/cometbft/cometbft/types"
-	"github.com/rs/zerolog"
 )
 
 var (

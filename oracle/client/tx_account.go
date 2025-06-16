@@ -3,9 +3,10 @@ package client
 import (
 	"fmt"
 
+	"github.com/rs/zerolog"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/rs/zerolog"
 )
 
 // AccountInfo handle the account sequence

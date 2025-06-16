@@ -1,10 +1,12 @@
 package oracle
 
 import (
-	"cosmossdk.io/math"
-	"github.com/cosmos/cosmos-sdk/telemetry"
 	"github.com/hashicorp/go-metrics"
 	"github.com/rs/zerolog"
+
+	"cosmossdk.io/math"
+
+	"github.com/cosmos/cosmos-sdk/telemetry"
 
 	"github.com/kiichain/price-feeder/oracle/provider"
 )

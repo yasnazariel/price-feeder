@@ -4,13 +4,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/rs/zerolog"
+	"github.com/stretchr/testify/require"
+
 	"cosmossdk.io/math"
+
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/provider"
 	"github.com/kiichain/price-feeder/oracle/types"
-
-	"github.com/rs/zerolog"
-	"github.com/stretchr/testify/require"
 )
 
 func TestSuccessFilterCandleDeviations(t *testing.T) {

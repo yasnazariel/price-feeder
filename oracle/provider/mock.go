@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"cosmossdk.io/math"
+
 	"github.com/kiichain/price-feeder/oracle/types"
 )
 

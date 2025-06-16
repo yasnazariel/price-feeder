@@ -7,17 +7,19 @@ import (
 	"testing"
 	"time"
 
-	"cosmossdk.io/math"
-	sdkclient "github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/hashicorp/go-metrics"
+	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"golang.org/x/exp/slices"
 
-	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
+	"cosmossdk.io/math"
+
+	sdkclient "github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/client"
 	"github.com/kiichain/price-feeder/oracle/provider"
@@ -220,7 +222,6 @@ func (ots *OracleTestSuite) TestStop() {
 }
 
 func (ots *OracleTestSuite) TestPrices() {
-
 	// initial prices should be empty (not set)
 	ots.Require().Empty(ots.oracle.GetPrices())
 
@@ -799,6 +800,7 @@ func TestFilterPricesWithDenomList(t *testing.T) {
 		})
 	}
 }
+
 func TestGenerateExchangeRatesString(t *testing.T) {
 	testCases := map[string]struct {
 		input    sdk.DecCoins

@@ -5,10 +5,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"cosmossdk.io/math"
-	"github.com/kiichain/price-feeder/oracle/types"
-
 	"github.com/stretchr/testify/require"
+
+	"cosmossdk.io/math"
+
+	"github.com/kiichain/price-feeder/oracle/types"
 )
 
 func TestMockProvider_GetTickerPrices(t *testing.T) {

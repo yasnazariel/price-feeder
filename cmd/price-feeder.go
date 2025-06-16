@@ -11,12 +11,13 @@ import (
 	"syscall"
 	"time"
 
-	"cosmossdk.io/math"
-	input "github.com/cosmos/cosmos-sdk/client/input"
-
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
+
+	"cosmossdk.io/math"
+
+	input "github.com/cosmos/cosmos-sdk/client/input"
 
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle"

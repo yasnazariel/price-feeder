@@ -7,9 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"cosmossdk.io/math"
 	"github.com/BurntSushi/toml"
 	"github.com/go-playground/validator/v10"
+
+	"cosmossdk.io/math"
 )
 
 const (

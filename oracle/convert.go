@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/rs/zerolog"
+
 	"cosmossdk.io/math"
+
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/provider"
 	"github.com/kiichain/price-feeder/oracle/types"
-
-	"github.com/rs/zerolog"
 )
 
 // getUSDBasedProviders retrieves which providers for an asset have a USD-based pair,

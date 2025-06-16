@@ -11,9 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/telemetry"
 	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog"
+
+	"github.com/cosmos/cosmos-sdk/telemetry"
 
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle/types"
@@ -212,7 +213,6 @@ func (p *OkxProvider) SubscribeCurrencyPairs(cps ...types.CurrencyPair) error {
 
 // subscribeChannels subscribe all currency pairs into ticker and candle channels.
 func (p *OkxProvider) subscribeChannels(cps ...types.CurrencyPair) error {
-
 	return p.subscribeTickers(cps...)
 
 	// CONTEXT: we want to no-op the candles subscription because its using a different path and the price feeding provides more instantaneous data using ticker pricing anyways
