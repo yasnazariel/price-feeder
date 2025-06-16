@@ -1,5 +1,5 @@
 gas_adjustment = 1.5
-gas_prices = "0.00125ukii"
+gas_prices = "500000akii"
 
 [[deviation_thresholds]]
 base = "BTC"
@@ -38,7 +38,6 @@ base = "BTC"
 chain_denom = "ubtc"
 providers = [
   "huobi",
-  "crypto",
   "coinbase",
   "kraken",
   "okx"
@@ -50,7 +49,6 @@ base = "ETH"
 chain_denom = "ueth"
 providers = [
   "huobi",
-  "crypto",
   "coinbase",
   "kraken",
   "okx"
@@ -63,7 +61,6 @@ chain_denom = "usol"
 providers = [
   "huobi",
   "kraken",
-  "crypto",
   "coinbase",
   "okx",
 ]
@@ -75,7 +72,6 @@ chain_denom = "uxrp"
 providers = [
   "huobi",
   "kraken",
-  "crypto",
   "coinbase",
   "okx",
 ]
@@ -87,7 +83,6 @@ chain_denom = "ubnb"
 providers = [
   "huobi",
   "kraken",
-  "crypto",
   "okx",
 ]
 quote = "USDT"
@@ -97,8 +92,8 @@ base = "USDT"
 chain_denom = "uusdt"
 providers = [
   "kraken",
-  "crypto",
   "coinbase",
+  "crypto",
 ]
 quote = "USD"
 
@@ -120,23 +115,23 @@ providers = [
   "huobi",
   "okx",
   "gate",
-  "crypto",
 ]
 quote = "USDT"
 
 [account]
-address = "kii1..."
-chain_id = "kiichain3"
-validator = "kiivaloper1..."
+address = "kii10jmp6sgh4cc6zt3e8gw05wavvejgr5pwfe2u6n"
+chain_id = "localchain_1010-1"
+validator = "kiivaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pwu030m8"
 prefix = "kii"
 
+
 [keyring]
-backend = "os"
-dir = "~/.kiichain3"
+backend = "test"
+dir = "~/.kiichain"
 
 [rpc]
 grpc_endpoint = "localhost:9090"
-rpc_timeout = "100ms"
+rpc_timeout = "500ms"
 tmrpc_endpoint = "http://localhost:26657"
 
 [telemetry]
@@ -144,7 +139,7 @@ enable_hostname = true
 enable_hostname_label = true
 enable_service_label = true
 enabled = true
-global_labels = [["chain_id", "kiichain3"]]
+global_labels = [["chain_id", "localchain_1010-1"]]
 service_name = "price-feeder"
 prometheus_retention = 60
 
@@ -152,7 +147,3 @@ prometheus_retention = 60
 name = "binance"
 rest = "https://api1.binance.com"
 websocket = "stream.binance.com:9443"
-
-# [[healthchecks]]
-# url = "https://hc-ping.com/HEALTHCHECK-UUID"
-# timeout = "5s"
