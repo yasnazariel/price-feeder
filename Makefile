@@ -48,6 +48,7 @@ clean:
 ###############################################################################
 ###                                Linting                                  ###
 ###############################################################################
+
 golangci_lint_cmd=golangci-lint
 golangci_version=v1.60.1
 
@@ -67,3 +68,10 @@ format:
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -path "./tests/mocks/*" -not -name "*.pb.go" -not -name "*.pb.gw.go" -not -name "*.pulsar.go" -not -path "./crypto/keys/secp256k1/*" | xargs gofumpt -w -l
 	$(golangci_lint_cmd) run --fix
 .PHONY: format
+
+###############################################################################
+###                                 Tests                                   ###
+###############################################################################
+
+test-unit:
+	go test ./...
