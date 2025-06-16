@@ -21,8 +21,6 @@ import (
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle"
 	"github.com/kiichain/price-feeder/oracle/client"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const (
@@ -106,20 +104,6 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-
-	// Set prefixes (cosmos will analize accounts with these prefixes)
-	accountPubKeyPrefix := cfg.Account.Prefix + "pub"
-	validatorAddressPrefix := cfg.Account.Prefix + "valoper"
-	validatorPubKeyPrefix := cfg.Account.Prefix + "valoperpub"
-	consNodeAddressPrefix := cfg.Account.Prefix + "valcons"
-	consNodePubKeyPrefix := cfg.Account.Prefix + "valconspub"
-
-	// Set and seal config
-	sdkConfig := sdk.GetConfig()
-	sdkConfig.SetBech32PrefixForAccount(cfg.Account.Prefix, accountPubKeyPrefix)           // accounts must have this prefix
-	sdkConfig.SetBech32PrefixForValidator(validatorAddressPrefix, validatorPubKeyPrefix)   // validators' address must have this prefix
-	sdkConfig.SetBech32PrefixForConsensusNode(consNodeAddressPrefix, consNodePubKeyPrefix) // node address must have this prefix
-	sdkConfig.Seal()                                                                       // the previous configuration cannont be changed further
 
 	// Create context and goroutines group
 	ctx, cancel := context.WithCancel(cmd.Context())

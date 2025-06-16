@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
+	tmrpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	tmjsonclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -17,9 +17,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	evmkeyring "github.com/cosmos/evm/crypto/keyring"
 	kiiparams "github.com/kiichain/kiichain/v2/app/params"
 	"github.com/rs/zerolog"
 )
@@ -96,7 +96,7 @@ func NewOracleClient(
 		ValidatorAddr:       sdk.ValAddress(validatorAddrString),
 		ValidatorAddrString: validatorAddrString,
 		FeeGranterAddr:      feegrantAddr,
-		Encoding:            kiiparams.MakeEncodingConfig(),
+		Encoding:            encodingConfig,
 		GasAdjustment:       gasAdjustment,
 		GRPCEndpoint:        grpcEndpoint,
 		GasPrices:           gasPrices,
@@ -122,8 +122,14 @@ func NewOracleClient(
 		ChBlockHeight: oracleClient.BlockHeightEvents,
 	}
 
+	// Build a new raw RPC client for tendermint
+	rpcClient, err := tmrpchttp.New(oracleClient.TMRPC, "/websocket")
+	if err != nil {
+		return OracleClient{}, fmt.Errorf("failed to create raw RPC client: %w", err)
+	}
+
 	// start tracking the chain for new block events and update the height
-	err = chainHeightUpdater.Start(ctx, clientCtx.Client, oracleClient.Logger)
+	err = chainHeightUpdater.Start(ctx, rpcClient, oracleClient.Logger)
 	if err != nil {
 		return OracleClient{}, err
 	}
@@ -185,20 +191,23 @@ func (oc OracleClient) BroadcastTx(
 		return nil, err
 	}
 
-	// Build unsigned tx
-	transaction, err := tx.BuildUnsignedTx(txf, msgs...)
+	// Initialize the tx builder
+	txBuilder := clientCtx.TxConfig.NewTxBuilder()
+	err = txBuilder.SetMsgs(msgs...)
 	if err != nil {
 		return nil, err
 	}
 
+	txBuilder.SetGasLimit(200000)
+
 	// Sign the transaction
-	err = tx.Sign(txf, clientCtx.GetFromName(), transaction, true)
+	err = tx.Sign(clientCtx.CmdContext, txf, clientCtx.GetFromName(), txBuilder, false)
 	if err != nil {
 		return nil, err
 	}
 
 	// convert transaction to bytes to be sent
-	txBytes, err := clientCtx.TxConfig.TxEncoder()(transaction.GetTx())
+	txBytes, err := clientCtx.TxConfig.TxEncoder()(txBuilder.GetTx())
 	if err != nil {
 		return nil, err
 	}
@@ -207,7 +216,7 @@ func (oc OracleClient) BroadcastTx(
 
 	// broadcast transaction
 	resp, err := clientCtx.BroadcastTx(txBytes)
-	if resp != nil && resp.Code != 0 && resp.Code != sdkerrors.ErrAlreadyExists.ABCICode() {
+	if resp != nil && resp.Code != 0 {
 		err = fmt.Errorf("received error response code %d from broadcast tx: %s", resp.Code, resp.Logs.String())
 		return resp, err
 	}
@@ -235,7 +244,7 @@ func (oc OracleClient) CreateClientContext() (client.Context, error) {
 	}
 
 	// create a new keyring
-	kr, err := keyring.New("kiichain3", oc.KeyringBackend, oc.KeyringDir, keyringInput)
+	kr, err := keyring.New("kiichain", oc.KeyringBackend, oc.KeyringDir, keyringInput, oc.Encoding.Marshaler, evmkeyring.Option())
 	if err != nil {
 		return client.Context{}, err
 	}
@@ -249,12 +258,11 @@ func (oc OracleClient) CreateClientContext() (client.Context, error) {
 	httpClient.Timeout = oc.RPCTimeout
 
 	// create a tendermint RPC client
-	tmRPC, err := rpchttp.NewWithClient(oc.TMRPC, httpClient)
+	tmRPC, err := tmrpchttp.NewWithClient(oc.TMRPC, "/websocket", httpClient)
 	if err != nil {
 		return client.Context{}, err
 	}
 
-	// get keyring from the info from the oracle addr
 	keyInfo, err := kr.KeyByAddress(oc.OracleAddr)
 	if err != nil {
 		return client.Context{}, err
@@ -263,7 +271,6 @@ func (oc OracleClient) CreateClientContext() (client.Context, error) {
 	// create a cosmos client context
 	clientCtx := client.Context{
 		ChainID:           oc.ChainID,
-		JSONCodec:         oc.Encoding.Marshaler,
 		InterfaceRegistry: oc.Encoding.InterfaceRegistry,
 		Output:            os.Stderr,
 		BroadcastMode:     flags.BroadcastSync,
@@ -276,8 +283,8 @@ func (oc OracleClient) CreateClientContext() (client.Context, error) {
 		Client:            tmRPC,
 		Keyring:           kr,
 		FromAddress:       oc.OracleAddr,
-		FromName:          keyInfo.GetName(),
-		From:              keyInfo.GetName(),
+		FromName:          keyInfo.Name,
+		From:              keyInfo.Name,
 		OutputFormat:      "json",
 		UseLedger:         false,
 		Simulate:          false,

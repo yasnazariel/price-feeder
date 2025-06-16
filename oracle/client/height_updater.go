@@ -12,8 +12,8 @@ import (
 
 var (
 	started                  = false
-	queryEventNewBlockHeader = tmtypes.QueryForEvent(tmtypes.EventNewBlockHeaderValue) // event to be queried
-	queryInterval            = 20 * time.Millisecond                                   // time between query the latest new block event
+	queryEventNewBlockHeader = tmtypes.EventNewBlockHeader // event to be queried
+	queryInterval            = 20 * time.Millisecond       // time between query the latest new block event
 )
 
 // HeightUpdater is used to provide the updates of the latest chain
@@ -32,7 +32,7 @@ func (heightUpdater HeightUpdater) Start(
 ) error {
 	if !started {
 		// start rpc connection
-		err := rpcClient.Start(ctx)
+		err := rpcClient.Start()
 		if err != nil {
 			return err
 		}
@@ -53,7 +53,7 @@ func (heightUpdater HeightUpdater) subscribe(
 ) {
 	for {
 		// wait until a EventNewBlockHeader event
-		eventData, err := tmrpcclient.WaitForOneEvent(ctx, eventsClient, queryEventNewBlockHeader.String())
+		eventData, err := tmrpcclient.WaitForOneEvent(eventsClient, queryEventNewBlockHeader, 10*time.Second)
 		if err != nil {
 			logger.Debug().Err(err).Msg("Failed to query EventNewBlockHeader")
 		}

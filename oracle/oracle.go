@@ -311,7 +311,7 @@ func (o *Oracle) SetPrices(ctx context.Context) error {
 						{Name: "reason", Value: "set-prices"},
 						{Name: "provider", Value: providerName},
 					})
-					o.logger.Error().Msgf("failed to set prices for provider %s", providerName)
+					o.logger.Error().Msgf("failed to set prices for provider %s and pair %s", providerName, pair.String())
 					// returning nil to avoid canceling other providers that might succeed
 					return nil
 				}
