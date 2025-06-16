@@ -3,10 +3,11 @@ module github.com/kiichain/price-feeder
 go 1.23.8
 
 require (
+	cosmossdk.io/math v1.5.0
 	github.com/BurntSushi/toml v1.4.0
-	github.com/armon/go-metrics v0.4.1
 	github.com/cometbft/cometbft v0.38.17
 	github.com/cosmos/cosmos-sdk v0.50.13
+	github.com/cosmos/evm v0.1.0
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/kiichain/kiichain/v2 v2.0.0-oracle
 	github.com/sirkon/goproxy v1.4.8
@@ -20,11 +21,12 @@ require (
 	cosmossdk.io/core v0.11.1 // indirect
 	cosmossdk.io/errors v1.0.1 // indirect
 	cosmossdk.io/log v1.5.0 // indirect
-	cosmossdk.io/math v1.5.0 // indirect
 	cosmossdk.io/store v1.1.1 // indirect
 	cosmossdk.io/x/tx v0.13.7 // indirect
+	github.com/btcsuite/btcd v0.24.2 // indirect
+	github.com/btcsuite/btcd/btcutil v1.1.6 // indirect
+	github.com/btcsuite/btcd/chaincfg/chainhash v1.1.0 // indirect
 	github.com/cosmos/cosmos-db v1.1.1 // indirect
-	github.com/cosmos/evm v0.1.0 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gogoproto v1.7.0 // indirect
 	github.com/ethereum/go-ethereum v1.11.5 // indirect
@@ -41,6 +43,11 @@ require (
 	github.com/prometheus/client_golang v1.20.5 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
+	github.com/tidwall/gjson v1.18.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/tidwall/sjson v1.2.5 // indirect
+	github.com/tyler-smith/go-bip39 v1.1.0 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	google.golang.org/genproto v0.0.0-20240701130421-f6361c86f094 // indirect
 )
@@ -107,7 +114,7 @@ require (
 	github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
-	github.com/hashicorp/go-metrics v0.5.3 // indirect
+	github.com/hashicorp/go-metrics v0.5.3
 	github.com/hashicorp/go-plugin v1.5.2 // indirect
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
