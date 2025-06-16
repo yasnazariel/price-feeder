@@ -1,3 +1,50 @@
+#!/usr/bin/make -f
+
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+COMMIT := $(shell git log -1 --format='%H')
+
+# don't override user values
+ifeq (,$(VERSION))
+  VERSION := $(shell git describe --tags 2>/dev/null)
+  # if VERSION is empty, then populate it with branch's name and raw commit hash
+  ifeq (,$(VERSION))
+    VERSION := $(BRANCH)-$(COMMIT)
+  endif
+endif
+
+BUILDDIR ?= $(CURDIR)/build
+
+GO_SYSTEM_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1-2)
+REQUIRE_GO_VERSION = 1.23
+
+ldflags = -X github.com/kiichain/price-feeder/cmd/price-feeder/cmd.Version=$(VERSION) \
+		  -X github.com/kiichain/price-feeder/cmd/price-feeder/cmd.Commit=$(COMMIT) \
+
+BUILD_FLAGS := -ldflags '$(ldflags)'
+
+###############################################################################
+###                              Build                                      ###
+###############################################################################
+
+check_version:
+ifneq ($(shell [ "$(GO_SYSTEM_VERSION)" \< "$(REQUIRE_GO_VERSION)" ] && echo true),)
+	@echo "ERROR: Minimum Go version $(REQUIRE_GO_VERSION) is required for $(VERSION) of Kiichain Price Feeder."
+	exit 1
+endif
+
+BUILD_TARGETS := build install
+
+build: BUILD_ARGS=-o $(BUILDDIR)/
+
+$(BUILD_TARGETS): check_version go.sum $(BUILDDIR)/
+	go $@ -mod=readonly $(BUILD_FLAGS) $(BUILD_ARGS) ./...
+
+$(BUILDDIR)/:
+	mkdir -p $(BUILDDIR)/
+
+clean:
+	rm -rf $(BUILDDIR)/ artifacts/
+
 ###############################################################################
 ###                                Linting                                  ###
 ###############################################################################
