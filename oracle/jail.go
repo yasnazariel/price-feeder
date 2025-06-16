@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
@@ -56,10 +57,9 @@ func (o *Oracle) GetCachedJailedState(ctx context.Context, currentBlockHeight in
 // GetJailedState returns the current on-chain jailing state of the validator
 func (o *Oracle) GetJailedState(ctx context.Context) (bool, error) {
 	// create grpc connection with the blockchain
-	grpcConn, err := grpc.Dial(
+	grpcConn, err := grpc.NewClient(
 		o.oracleClient.GRPCEndpoint,
-		// the Cosmos SDK doesn't support any transport security mechanism
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(dialerFunc),
 	)
 	if err != nil {

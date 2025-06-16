@@ -48,7 +48,7 @@ func (heightUpdater HeightUpdater) Start(
 // subscribe listens to new blocks being made
 // and updates the chain height.
 func (heightUpdater HeightUpdater) subscribe(
-	ctx context.Context,
+	_ context.Context,
 	eventsClient tmrpcclient.EventsClient,
 	logger zerolog.Logger,
 ) {

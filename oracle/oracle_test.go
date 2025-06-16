@@ -77,6 +77,7 @@ func (mt *mockTelemetry) Len() int {
 }
 
 func (mt *mockTelemetry) AssertProviderError(t *testing.T, provider, base, reason, priceType string) {
+	t.Helper()
 	labels := []metrics.Label{
 		{Name: "provider", Value: provider},
 		{Name: "reason", Value: reason},
@@ -91,6 +92,7 @@ func (mt *mockTelemetry) AssertProviderError(t *testing.T, provider, base, reaso
 }
 
 func (mt *mockTelemetry) AssertContains(t *testing.T, keys []string, val float32, labels []metrics.Label) {
+	t.Helper()
 	for _, r := range mt.recorded {
 		if r.val == val && slices.Equal(keys, r.keys) && r.labelsEqual(labels) {
 			return

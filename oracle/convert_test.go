@@ -72,7 +72,7 @@ func TestGetUSDBasedProviders(t *testing.T) {
 	}
 	require.Equal(t, pairs, expectedPairs)
 
-	pairs, err = getUSDBasedProviders("BAR", providerPairs)
+	_, err = getUSDBasedProviders("BAR", providerPairs)
 	require.Error(t, err)
 }
 

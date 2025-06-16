@@ -25,11 +25,11 @@ import (
 )
 
 const (
-	LOG_LEVEL_JSON = "json"
-	LOG_LEVEL_TEXT = "text"
+	LogLevelJSON = "json"
+	LogLevelTest = "text"
 
-	FLAG_LOG_LEVEL  = "log-level"
-	FLAG_LOG_FORMAT = "log-format"
+	FlagLogLevel  = "log-level"
+	FlagLogFormat = "log-format"
 
 	envVariablePass = "PRICE_FEEDER_PASS"
 )
@@ -47,8 +47,8 @@ sources, e.g. exchanges, then, submits vote messages following the oracle voting
 // init is executed automatically when by the Golang work flow and adds the version subcommand
 // and persistent flags
 func init() {
-	rootCmd.PersistentFlags().String(FLAG_LOG_LEVEL, zerolog.InfoLevel.String(), "logging level")
-	rootCmd.PersistentFlags().String(FLAG_LOG_FORMAT, LOG_LEVEL_TEXT, "logging format; must be either json or text")
+	rootCmd.PersistentFlags().String(FlagLogLevel, zerolog.InfoLevel.String(), "logging level")
+	rootCmd.PersistentFlags().String(FlagLogFormat, LogLevelTest, "logging format; must be either json or text")
 
 	// add subcomands
 	rootCmd.AddCommand(CmdgetVersion())
@@ -67,13 +67,13 @@ func Execute() {
 // priceFeederCmdHandler init the price feeder
 func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 	// get value from the log level cmd flag
-	logLvlStr, err := cmd.Flags().GetString(FLAG_LOG_LEVEL)
+	logLvlStr, err := cmd.Flags().GetString(FlagLogLevel)
 	if err != nil {
 		return err
 	}
 
 	// get value from the log format cmd flag
-	logFormatStr, err := cmd.Flags().GetString(FLAG_LOG_FORMAT)
+	logFormatStr, err := cmd.Flags().GetString(FlagLogFormat)
 	if err != nil {
 		return err
 	}
@@ -87,10 +87,10 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 	var logWriter io.Writer
 	switch strings.ToLower(logFormatStr) {
 
-	case LOG_LEVEL_JSON:
+	case LogLevelJSON:
 		logWriter = os.Stderr
 
-	case LOG_LEVEL_TEXT:
+	case LogLevelTest:
 		logWriter = zerolog.ConsoleWriter{Out: os.Stderr}
 
 	default:

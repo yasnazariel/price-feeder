@@ -7,6 +7,7 @@ import (
 
 	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -77,10 +78,9 @@ func (o *Oracle) GetParamCache(ctx context.Context, currentBlockHeight int64) (o
 // GetParams returns the current on-chain parameters of the x/oracle module.
 func (o *Oracle) GetParams(ctx context.Context) (oracletypes.Params, error) {
 	// create the connection with the blockchain
-	grpcConn, err := grpc.Dial(
+	grpcConn, err := grpc.NewClient(
 		o.oracleClient.GRPCEndpoint,
-		// the Cosmos SDK doesn't support any transport security mechanism
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithContextDialer(dialerFunc),
 	)
 	if err != nil {
