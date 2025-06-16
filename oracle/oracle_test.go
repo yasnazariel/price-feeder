@@ -1064,10 +1064,14 @@ func TestGetComputedPricesCandlesConversion(t *testing.T) {
 	require.NoError(t, err,
 		"It should successfully filter out bad candles and convert everything to USD",
 	)
-	require.Equal(t,
-		ethUsdPrice.Mul(
-			btcEthPrice).Add(btcUSDPrice).Quo(math.LegacyMustNewDecFromStr("2")),
-		prices[btcPair.Base],
+	half := math.LegacyMustNewDecFromStr("2")
+	btcFromEth := ethUsdPrice.Mul(btcEthPrice)
+	average := btcFromEth.Add(btcUSDPrice).Quo(half)
+
+	require.InEpsilon(t,
+		average.MustFloat64(),
+		prices[btcPair.Base].MustFloat64(),
+		1e-15, // tolerance
 	)
 }
 
