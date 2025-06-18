@@ -36,8 +36,10 @@ var startCMD = &cobra.Command{
 	Use:   "start [config-file]",
 	Args:  cobra.ExactArgs(1),
 	Short: "starts the price-feeder process with a given configuration file",
-	Long:  `starts the price-feeder process with a given configuration file.`,
-	RunE:  priceFeederCmdHandler,
+	Long: `starts the price-feeder process with a given configuration file.
+The environment variable PRICE_FEEDER_PASS can be used to set the keyring password.
+If the flag --skip-password is set, the keyring password prompt will be skipped.`,
+	RunE: priceFeederCmdHandler,
 }
 
 func init() {
@@ -78,7 +80,7 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("invalid logging format: %s", logFormatStr)
 	}
 
-	// create looger
+	// create logger
 	logger := zerolog.New(logWriter).Level(logLvl).With().Timestamp().Logger()
 
 	// pase configurations from the config file to Config struct
