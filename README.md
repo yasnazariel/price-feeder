@@ -8,28 +8,41 @@ If a cluster is running Oracle price-feeder, your validator is also required to 
 
 ## Create an account for Oracle Price Feeder Delegate
 
-1. To avoid account sequence errors and security problems with the admin account, it's recommended to create a different account as an Oracle delegate. To do so, you'll need to create the account with
-   `kiichaind keys add price-feeder-delegate` or any other account name. This may still cause account sequence errors for the delegate account but since it's only being used for the Oracle price feeder, it's not a concern
-2. With the account address output, `export PRICE_FEEDER_DELEGATE_ADDR=<output>`
-3. `kiichaind tx oracle set-feeder $PRICE_FEEDER_DELEGATE_ADDR --from <validator-wallet> --fees 2000ukii -b block -y --chain-id {chain-id}`
-4. Make sure to send bank a tiny amount to the account in order for the account to be created `kiichaind tx bank send [VALIDATOR_ACCOUNT] $PRICE_FEEDER_DELEGATE_ADDR --from [VALIDATOR_ACCOUNT] [AMOUNT] --fees=2000ukii -b block -y`
+1. To avoid account sequence errors and security problems with the admin account, it's recommended to create a different account as an Oracle delegate. To do so, you'll need to create the account with:
+
+```bash
+kiichaind keys add price-feeder-delegate
+```
+
+Or use any arbitrary key name. This project may still cause account sequence errors for the delegate account but since it's only being used for the Oracle price feeder, it's not a concern
+
+2. With the account address output run:
+
+```bash
+export PRICE_FEEDER_DELEGATE_ADDR=<output>
+```
+
+3. To define the feeder, you can execute:
+
+```bash
+kiichaind tx oracle set-feeder $PRICE_FEEDER_DELEGATE_ADDR --from <validator-wallet> --fees 10000000000000000akii -b block -y --chain-id {chain-id}
+```
+
+4. Make sure to send bank a tiny amount to the account in order for the account to be created:
+
+```bash
+kiichaind tx bank send [VALIDATOR_ACCOUNT] $PRICE_FEEDER_DELEGATE_ADDR --from [VALIDATOR_ACCOUNT] [AMOUNT] --fees 10000000000000000akii -b block -y
+```
 
 Then you need to export `PRICE_FEEDER_PASS` environment variable to set up the keyring password. That was entered during the account setup.
 
-Ex :
-`export PRICE_FEEDER_PASS=keyringPassword`
+Ex:
+
+```bash
+export PRICE_FEEDER_PASS=keyringPassword
+```
 
 If this environment variable is not set, the price feeder will prompt the user for input.
-
-## Setup Healthchecks
-
-Add this to the config.toml, you need to add the timeout field as it's required
-
-```
-[[healthchecks]]
-url = "https://hc-ping.com/xxxxxx"
-timeout = "5s"
-```
 
 ## Build or install Price Feeder
 
@@ -100,19 +113,19 @@ $ price-feeder start /path/to/price_feeder_config.toml
 
 ## Configuration
 
-### `telemetry`
+### telemetry
 
 A set of options for the application's telemetry, which is disabled by default. An in-memory sink is the default, but Prometheus is also supported. We use the [cosmos sdk telemetry package](https://github.com/cosmos/cosmos-sdk/blob/main/docs/core/telemetry.md).
 
-### `deviation`
+### deviation
 
 Deviation allows validators to set a custom amount of standard deviations around the median which is helpful if any providers become faulty. It should be noted that the default for this option is 1 standard deviation.
 
-### `provider_endpoints`
+### provider_endpoints
 
 The provider_endpoints option enables validators to setup their own API endpoints for a given provider.
 
-### `currency_pairs`
+### currency_pairs
 
 The `currency_pairs` sections contains one or more exchange rates along with the
 providers from which to get market data from. It is important to note that the
@@ -141,23 +154,23 @@ Providing multiple providers is beneficial in case any provider fails to return
 market data. Prices per exchange rate are submitted on-chain via pre-vote and
 vote messages using a time-weighted average price (TVWAP).
 
-### `account`
+### account
 
 The `account` section contains the oracle's feeder and validator account information.
 These are used to sign and populate data in pre-vote and vote oracle messages.
 
-### `keyring`
+### keyring
 
 The `keyring` section contains Keyring related material used to fetch the key pair
 associated with the oracle account that signs pre-vote and vote oracle messages.
 
-### `rpc`
+### rpc
 
 The `rpc` section contains the Tendermint and Cosmos application gRPC endpoints.
 These endpoints are used to query for on-chain data that pertain to oracle
 functionality and for broadcasting signed pre-vote and vote oracle messages.
 
-### `healthchecks`
+### healthchecks
 
 The `healthchecks` section defines optional healthcheck endpoints to ping on successful
 oracle votes. This provides a simple alerting solution which can integrate with a service
