@@ -31,12 +31,18 @@ url = "https://hc-ping.com/xxxxxx"
 timeout = "5s"
 ```
 
-## Make and install the binary
+## Build or install Price Feeder
 
-From the root of the Git repo
+To build the price feeder, run the following command from the root of the Git repository:
 
 ```bash
-make install-price-feeder
+make build
+```
+
+To install run:
+
+```bash
+make install
 ```
 
 ## Run Price Feeder
@@ -64,7 +70,7 @@ dir = "~/.kiichain3"
 After finishing the config.toml, be sure you are on the root of this project and then type the following command to manually run the price-feeder:
 
 ```bash
-price_feeder oracle/price_feeder/config.toml
+price_feeder start oracle/price_feeder/config.toml
 ```
 
 ## Providers
@@ -89,7 +95,7 @@ More information on the keyring can be found [here](#keyring)
 Please see the [example configuration](./config.toml) for more details.
 
 ```shell
-$ price-feeder /path/to/price_feeder_config.toml
+$ price-feeder start /path/to/price_feeder_config.toml
 ```
 
 ## Configuration
