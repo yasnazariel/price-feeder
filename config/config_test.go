@@ -40,8 +40,10 @@ func TestValidate(t *testing.T) {
 				GlobalLabels:            make([][]string, 1),
 				PrometheusRetentionTime: 120,
 			},
-			GasAdjustment: 1.5,
-			GasPrices:     "0.00125akii",
+			Gas: config.Gas{
+				GasAdjustment: 1.5,
+				GasPrices:     "50000akii",
+			},
 			Healthchecks: []config.Healthchecks{
 				{URL: "https://hc-ping.com/HEALTHCHECK-UUID", Timeout: "200ms"},
 			},
