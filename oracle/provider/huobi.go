@@ -50,6 +50,14 @@ type (
 		subscribedPairs map[string]types.CurrencyPair // Symbol => types.CurrencyPair
 	}
 
+	// HuobiSubscriptionResult defines the response type for the subscription
+	HuobiSubscriptionResult struct {
+		ID     *string `json:"id"`
+		Status string  `json:"status"` // "ok" or "error"
+		Subbed string  `json:"subbed"` // Channel name. Format：market.$symbol.ticker
+		TS     int64   `json:"ts"`     // Timestamp in milliseconds
+	}
+
 	// HuobiTicker defines the response type for the channel and the tick object for a
 	// given ticker/symbol.
 	HuobiTicker struct {
@@ -330,15 +338,23 @@ func (p *HuobiProvider) messageReceived(messageType int, bz []byte, reconnectTic
 		return
 	}
 
+	// Check if the message is a subscription result
+	var subResult HuobiSubscriptionResult
+	subscriptionErr := json.Unmarshal(bz, &subResult)
+	if subResult.Status == "ok" {
+		return
+	}
+
 	p.logger.Error().
 		Int("length", len(bz)).
 		AnErr("ticker", tickerErr).
 		AnErr("candle", candleErr).
+		AnErr("subscription", subscriptionErr).
 		Msg("Error on receive message")
 }
 
 // pong return a heartbeat message when a "ping" is received and reset the
-// recconnect ticker because the connection is alive. After connected to Huobi's
+// reconnect ticker because the connection is alive. After connected to Huobi's
 // Websocket server, the server will send heartbeat periodically (5s interval).
 // When client receives an heartbeat message, it should respond with a matching
 // "pong" message which has the same integer in it, e.g. {"ping": 1492420473027}
