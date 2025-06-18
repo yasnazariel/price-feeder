@@ -74,11 +74,20 @@ type (
 		Keyring           Keyring            `toml:"keyring" validate:"required,gt=0,dive,required"`
 		RPC               RPC                `toml:"rpc" validate:"required,gt=0,dive,required"`
 		Telemetry         Telemetry          `toml:"telemetry"`
-		GasAdjustment     float64            `toml:"gas_adjustment" validate:"required"`
-		GasPrices         string             `toml:"gas_prices" validate:"required"`
+		Gas               Gas                `toml:"gas" validate:"required,gt=0,dive,required"`
 		ProviderTimeout   string             `toml:"provider_timeout"`
 		ProviderEndpoints []ProviderEndpoint `toml:"provider_endpoints" validate:"dive"`
 		Healthchecks      []Healthchecks     `toml:"healthchecks" validate:"dive"`
+	}
+
+	// Gas defines the gas adjustment and gas prices used for transactions.
+	Gas struct {
+		// GasAdjustment is a multiplier applied to the gas estimate to ensure
+		// that the transaction has enough gas to be processed.
+		GasAdjustment float64 `toml:"gas_adjustment" validate:"required"`
+
+		// GasPrices defines the gas prices used for transactions.
+		GasPrices string `toml:"gas_prices" validate:"required"`
 	}
 
 	// CurrencyPair defines a price quote of the exchange rate for two different
