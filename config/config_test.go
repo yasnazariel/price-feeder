@@ -138,6 +138,7 @@ func TestParseConfig_Valid(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
+[gas]
 gas_adjustment = 1.5
 gas_prices = "0.00125akii"
 
@@ -226,6 +227,7 @@ func TestParseConfig_Valid_NoTelemetry(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
+[gas]
 gas_adjustment = 1.5
 gas_prices = "0.00125akii"
 
@@ -369,6 +371,7 @@ func TestParseConfig_Valid_Deviations(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
+[gas]
 gas_adjustment = 1.5
 gas_prices = "0.00125akii"
 
