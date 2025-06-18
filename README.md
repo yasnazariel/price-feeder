@@ -1,13 +1,6 @@
-# Oracle Price Feeder
+# Kiichain Oracle Price Feeder
 
-This is a standalone version of [Umee's fantastic work](https://github.com/umee-network/umee/tree/main/price-feeder) and integrating it more closely with the Cosmos SDK.
-
-## Changes
-
-- `exchange_rates` when broadcasting votes has been reverted to the Cosmos SDK denom string, as is used in Se's Oracle module
-- `config.toml` supports an `account.prefix` property, to provide compatibility across multiple networks
-
----
+This is the Kiichain version of the incredible work of SEI on the price feeder module. The original implementation is available at [SEI's price-feeder](https://github.com/sei-protocol/sei-chain/tree/main/oracle/price-feeder).
 
 # Setup
 
