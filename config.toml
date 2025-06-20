@@ -16,9 +16,9 @@ gas_prices = "500000akii"
 [account]
 # The account name to use for signing transactions
 # Can be the validator master account or a feeder account
-address = "kii10jmp6sgh4cc6zt3e8gw05wavvejgr5pwfe2u6n"
+address = "kii1..."
 # The validator validator who is voting
-validator = "kiivaloper10jmp6sgh4cc6zt3e8gw05wavvejgr5pwu030m8"
+validator = "kiivaloper1..."
 # The prefix for the keys
 prefix = "kii"
 # The chain ID for signatures
@@ -169,6 +169,21 @@ providers = [
 # Quote is the asset against which the base is priced
 quote = "USDT"
 
+[[currency_pairs]]
+# Base is the asset being priced
+base = "TRX"
+# Chain denom is the denomination used on the chain
+chain_denom = "utrx"
+# Providers are the exchanges providing the price data
+providers = [
+  "huobi",
+  "okx",
+  "binance",
+  "gate",
+]
+# Quote is the asset against which the base is priced
+quote = "USDT"
+
 #######################################################
 ###                Pair deviation                   ###
 #######################################################
@@ -221,6 +236,12 @@ threshold = "2"
 [[deviation_thresholds]]
 # Base is the asset being priced
 base = "XAUT"
+# The threshold is the maximum number of standard deviations allowed
+threshold = "2"
+
+[[deviation_thresholds]]
+# Base is the asset being priced
+base = "TRX"
 # The threshold is the maximum number of standard deviations allowed
 threshold = "2"
 
