@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
+	oracletypes "github.com/kiichain/kiichain/v3/x/oracle/types"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
