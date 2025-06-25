@@ -1,7 +1,7 @@
 package client
 
 import (
-	kiiparams "github.com/kiichain/kiichain/v2/app/params"
+	kiiparams "github.com/kiichain/kiichain/v3/app/params"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 

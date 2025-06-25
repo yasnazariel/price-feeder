@@ -9,7 +9,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.50.13
 	github.com/cosmos/evm v0.1.0
 	github.com/go-playground/validator/v10 v10.11.1
-	github.com/kiichain/kiichain/v2 v2.0.0-oracle
+	github.com/kiichain/kiichain/v3 v3.0.0-rc1
 	github.com/sirkon/goproxy v1.4.8
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0

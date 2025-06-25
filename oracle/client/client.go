@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	kiiparams "github.com/kiichain/kiichain/v2/app/params"
+	kiiparams "github.com/kiichain/kiichain/v3/app/params"
 	"github.com/rs/zerolog"
 
 	tmrpchttp "github.com/cometbft/cometbft/rpc/client/http"

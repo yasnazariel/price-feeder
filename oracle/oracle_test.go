@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-metrics"
-	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
+	oracletypes "github.com/kiichain/kiichain/v3/x/oracle/types"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"

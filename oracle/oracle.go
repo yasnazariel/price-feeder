@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-metrics"
-	oracletypes "github.com/kiichain/kiichain/v2/x/oracle/types"
+	oracletypes "github.com/kiichain/kiichain/v3/x/oracle/types"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"

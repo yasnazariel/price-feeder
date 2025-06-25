@@ -535,8 +535,8 @@ github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHm
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
-github.com/kiichain/kiichain/v2 v2.0.0-oracle h1:GvLbp/Gjx+ixpSUmsdzOuetwF2FnymsN2ZTwsw0DsQY=
-github.com/kiichain/kiichain/v2 v2.0.0-oracle/go.mod h1:oc/1EApI4okhPN/rAoe/roLDM4etptusrGF18hiBUQ0=
+github.com/kiichain/kiichain/v3 v3.0.0-rc1 h1:vHP6bD+qn7ZMfHF21IzjqEbLuGxLweHHMf0tNXq0f1I=
+github.com/kiichain/kiichain/v3 v3.0.0-rc1/go.mod h1:FtZn3dSzLR2vDYVD2c9hhv60zq9VPjA3LVzuuLVams4=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
 github.com/kisielk/errcheck v1.2.0/go.mod h1:/BMXB+zMLi60iA8Vv6Ksmxu/1UDYcXs4uQLJ+jE2L00=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
