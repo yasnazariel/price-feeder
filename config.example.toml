@@ -56,7 +56,7 @@ chain_id = "oro_1336-1"
 
 [keyring]
 # The keyring backend to use for storing keys
-backend = "test"
+backend = "os"
 # The keyring directory where keys are stored
 dir = "~/.kiichain"
 
