@@ -1,4 +1,28 @@
 #######################################################
+###                Price Feeder Config              ###
+#######################################################
+
+# This is the main configuration for the price feeder module.
+[main]
+# Define if the price feeder should send votes to the chain
+enable_voting = true
+# Defines if the price feeder server is enabled
+enable_server = true
+
+# Defines the server configuration
+[server]
+# The address where the server will listen for HTTP requests
+listen_addr = "0.0.0.0:7171"
+# The timeout for read operations
+read_timeout = "20s"
+# The timeout for write operations
+write_timeout = "20s"
+# Define if cors is enabled
+enable_cors = true
+# The allowed origins for CORS requests
+allowed_origins = ["*"]
+
+#######################################################
 ###              Gas configurations                 ###
 #######################################################
 
@@ -19,7 +43,7 @@ gas_limit = 2000000
 # The account name to use for signing transactions
 # Can be the validator master account or a feeder account
 address = "kii1..."
-# The validator validator who is voting
+# The validator who is voting
 validator = "kiivaloper1..."
 # The prefix for the keys
 prefix = "kii"
@@ -41,7 +65,7 @@ dir = "~/.kiichain"
 #######################################################
 
 [rpc]
-# The RPC endpoint for node who will send transactions
+# The RPC endpoint for the node that will send transactions
 grpc_endpoint = "localhost:9090"
 # The timeout for RPC calls
 rpc_timeout = "500ms"
@@ -268,6 +292,8 @@ websocket = "stream.binance.com:9443"
 [telemetry]
 # Enable or disable telemetry
 enabled = true
+# The service name for telemetry
+service_name = "price-feeder"
 # Enable or disable telemetry hostname
 enable_hostname = true
 # Enable or disable telemetry hostname label
@@ -276,9 +302,5 @@ enable_hostname_label = true
 enable_service_label = true
 # Global labels for the telemetry
 global_labels = [["chain_id", "oro_1336-1"]]
-# The service name for telemetry
-service_name = "price-feeder"
 # How long prometheus should retain data
 prometheus_retention = 60
-
-
