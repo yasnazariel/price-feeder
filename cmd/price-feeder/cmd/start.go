@@ -5,12 +5,15 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
 	"time"
 
+	"github.com/gorilla/mux"
+	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
@@ -18,10 +21,12 @@ import (
 	"cosmossdk.io/math"
 
 	input "github.com/cosmos/cosmos-sdk/client/input"
+	"github.com/cosmos/cosmos-sdk/telemetry"
 
 	"github.com/kiichain/price-feeder/config"
 	"github.com/kiichain/price-feeder/oracle"
 	"github.com/kiichain/price-feeder/oracle/client"
+	v1 "github.com/kiichain/price-feeder/router/v1"
 )
 
 var (
@@ -178,6 +183,43 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 		cfg.Healthchecks,
 	)
 
+	// Create the telemetry config
+	telemetryConfig := telemetry.Config{
+		Enabled:                 cfg.Telemetry.Enabled,
+		ServiceName:             cfg.Telemetry.ServiceName,
+		EnableHostname:          cfg.Telemetry.EnableHostname,
+		EnableHostnameLabel:     cfg.Telemetry.EnableHostnameLabel,
+		EnableServiceLabel:      cfg.Telemetry.EnableServiceLabel,
+		GlobalLabels:            cfg.Telemetry.GlobalLabels,
+		PrometheusRetentionTime: cfg.Telemetry.PrometheusRetentionTime,
+	}
+	err = mapstructure.Decode(cfg.Telemetry, &telemetryConfig)
+	if err != nil {
+		return fmt.Errorf("failed to decode telemetry config: %w", err)
+	}
+	metrics, err := telemetry.New(telemetryConfig)
+	if err != nil {
+		return err
+	}
+
+	// Enable the services based on the config
+	if cfg.Main.EnableServer {
+		// Start the server
+		group.Go(func() error {
+			// Start the server process
+			return startServer(ctx, logger, cfg, oracle, metrics)
+		})
+	}
+
+	// Check if voter is enabled
+	if cfg.Main.EnableVoting {
+		// Start the voter process
+		group.Go(func() error {
+			// Start the voter process
+			return startPriceOracle(ctx, logger, oracle)
+		})
+	}
+
 	// start the process that calculates oracle prices and votes
 	group.Go(func() error {
 		return startPriceOracle(ctx, logger, oracle)
@@ -246,6 +288,72 @@ func startPriceOracle(ctx context.Context, logger zerolog.Logger, oracle *oracle
 		case err := <-srvErrCh:
 			logger.Err(err).Msg("error starting the price-feeder oracle")
 			oracle.Stop()
+			return err
+		}
+	}
+}
+
+// startServer initializes a goroutine with the server
+func startServer(
+	ctx context.Context,
+	logger zerolog.Logger,
+	cfg config.Config,
+	oracle *oracle.Oracle,
+	metrics *telemetry.Metrics,
+) error {
+	// Start the router
+	rtr := mux.NewRouter()
+	v1Router := v1.New(logger, cfg, oracle, metrics)
+	v1Router.RegisterRoutes(rtr, "")
+
+	// Parse the read and write timeout from the config
+	writeTimeout, err := time.ParseDuration(cfg.Server.WriteTimeout)
+	if err != nil {
+		return err
+	}
+	readTimeout, err := time.ParseDuration(cfg.Server.ReadTimeout)
+	if err != nil {
+		return err
+	}
+
+	// Create a new server with a error channel
+	serverErrChannel := make(chan error, 1)
+	server := &http.Server{
+		Handler:           rtr,
+		Addr:              cfg.Server.ListenAddress,
+		WriteTimeout:      writeTimeout,
+		ReadTimeout:       readTimeout,
+		ReadHeaderTimeout: readTimeout,
+	}
+
+	// Start up the server in a goroutine
+	go func() {
+		logger.Info().Str("listen_addr", cfg.Server.ListenAddress).Msg("starting price-feeder server...")
+		serverErrChannel <- server.ListenAndServe()
+	}()
+
+	// Handle states in a for loop
+	for {
+		select {
+		case <-ctx.Done():
+			// Build a shutdown context
+			shutdownCtx, cancel := context.WithTimeout(ctx, 15*time.Second)
+			defer cancel()
+
+			// Log that the server is shutting down
+			logger.Info().Str("listen_addr", cfg.Server.ListenAddress).Msg("shutting down price-feeder server...")
+
+			// Shutdown the server
+			if err := server.Shutdown(shutdownCtx); err != nil {
+				logger.Err(err).Msg("error shutting down the price-feeder server")
+				return err
+			}
+
+			return nil
+
+		case err := <-serverErrChannel:
+			// Log the error and return it
+			logger.Error().Err(err).Msg("failed to start price-feeder server")
 			return err
 		}
 	}
