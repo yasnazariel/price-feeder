@@ -62,7 +62,7 @@ make install
 
 You can run it as a separate binary but it's recommended to run it as a system daemon service, you can use the following as an example.
 
-You need to setup the config.toml file (see [this for example](./config.toml)), you need to set the following fields in:
+You need to setup the config.toml file (see [this for example](./config.example.toml)), you need to set the following fields in:
 
 ```bash
 ...
@@ -86,6 +86,42 @@ After finishing the config.toml, be sure you are on the root of this project and
 price_feeder start oracle/price_feeder/config.toml
 ```
 
+## HTTP server
+
+A HTTP server can be enabled on the price feeder.
+The server will expose the following endpoints:
+- `/healthz`: A simple health check endpoint that returns a 200 OK response.
+- `/prices`: Returns the current prices fetched from the oracle's set of exchange rate providers.
+- `/metrics`: Returns the current metrics collected by the price feeder, including prices and their timestamps.
+
+### HTTP server configuration
+
+The HTTP server can be configured in the `config.toml` file under the `server` section. The following options are available:
+
+```toml
+# This is the main configuration for the price feeder module.
+[main]
+# Define if the price feeder should send votes to the chain
+enable_voting = true
+# Defines if the price feeder server is enabled
+enable_server = true
+
+# Defines the server configuration
+[server]
+# The address where the server will listen for HTTP requests
+listen_addr = "0.0.0.0:7171"
+# The timeout for read operations
+read_timeout = "20s"
+# The timeout for write operations
+write_timeout = "20s"
+# Define if cors is enabled
+enable_cors = true
+# The allowed origins for CORS requests
+allowed_origins = ["*"]
+```
+
+If CORS is enabled, the server will allow requests from any origin. You can restrict this by modifying the `allowed_origins` field to include only specific origins.
+
 ## Providers
 
 The list of current supported providers:
@@ -105,7 +141,7 @@ file defines what exchange rates to fetch and what providers to get them from.
 In addition, it defines the oracle's keyring and feeder account information.
 The keyring's password is defined via environment variables or user input.
 More information on the keyring can be found [here](#keyring)
-Please see the [example configuration](./config.toml) for more details.
+Please see the [example configuration](./config.example.toml) for more details.
 
 ```shell
 $ price-feeder start /path/to/price_feeder_config.toml

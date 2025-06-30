@@ -68,6 +68,8 @@ var (
 type (
 	// Config defines all necessary price-feeder configuration parameters.
 	Config struct {
+		Main              Main               `toml:"main" validate:"required,gt=0,dive,required"`
+		Server            Server             `toml:"server" validate:"required,gt=0,dive,required"`
 		CurrencyPairs     []CurrencyPair     `toml:"currency_pairs" validate:"required,gt=0,dive,required"`
 		Deviations        []Deviation        `toml:"deviation_thresholds"`
 		Account           Account            `toml:"account" validate:"required,gt=0,dive,required"`
@@ -78,6 +80,28 @@ type (
 		ProviderTimeout   string             `toml:"provider_timeout"`
 		ProviderEndpoints []ProviderEndpoint `toml:"provider_endpoints" validate:"dive"`
 		Healthchecks      []Healthchecks     `toml:"healthchecks" validate:"dive"`
+	}
+
+	// Main defines the main configuration parameters for the price-feeder
+	Main struct {
+		// EnableServer indicates whether the price-feeder server should be enabled
+		EnableServer bool `toml:"enable_server" validate:"required"`
+		// EnableVoting indicates whether the price-feeder should vote on prices
+		EnableVoting bool `toml:"enable_voting" validate:"required"`
+	}
+
+	// Server defines the server configuration parameters for the price-feeder
+	Server struct {
+		// ListenAddress is the address on which the price-feeder server
+		ListenAddress string `toml:"listen_addr" validate:"required"`
+		// ReadTimeout is the maximum duration for reading the entire request
+		ReadTimeout string `toml:"read_timeout" validate:"required"`
+		// WriteTimeout is the maximum duration before timing out writes of the response
+		WriteTimeout string `toml:"write_timeout" validate:"required"`
+		// EnableCORS indicates whether CORS is enabled for the server.
+		EnableCORS bool `toml:"enable_cors" validate:"required"`
+		// AllowedOrigins defines the allowed origins for CORS requests.
+		AllowedOrigins []string `toml:"allowed_origins"`
 	}
 
 	// Gas defines the gas adjustment and gas prices used for transactions.

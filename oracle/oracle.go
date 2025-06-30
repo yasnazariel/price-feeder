@@ -181,6 +181,15 @@ func (o *Oracle) Stop() {
 	<-o.closer.Done() // wait until the channel is successfully closed
 }
 
+// GetLastPriceSyncTimestamp returns the latest timestamp at which prices where
+// fetched from the oracle's set of exchange rate providers.
+func (o *Oracle) GetLastPriceSyncTimestamp() time.Time {
+	o.mtx.RLock()
+	defer o.mtx.RUnlock()
+
+	return o.lastPriceSyncTS
+}
+
 // GetPrices returns a copy of the current prices fetched from the oracle's
 // set of exchange rate providers.
 func (o *Oracle) GetPrices() sdk.DecCoins {

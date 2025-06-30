@@ -13,6 +13,17 @@ import (
 func TestValidate(t *testing.T) {
 	validConfig := func() config.Config {
 		return config.Config{
+			Main: config.Main{
+				EnableVoting: true,
+				EnableServer: true,
+			},
+			Server: config.Server{
+				ListenAddress:  "0.0.0.0:7171",
+				ReadTimeout:    "20s",
+				WriteTimeout:   "20s",
+				EnableCORS:     true,
+				AllowedOrigins: []string{"*"},
+			},
 			CurrencyPairs: []config.CurrencyPair{
 				{Base: "ATOM", ChainDenom: "uatom", Quote: "USDT", Providers: []string{"kraken"}},
 			},
@@ -139,16 +150,21 @@ func TestParseConfig_Valid(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
+[main]
+enable_voting = true
+enable_server = true
+
+[server]
+listen_addr = "0.0.0.0:7171"
+read_timeout = "20s"
+write_timeout = "20s"
+enable_cors = true
+allowed_origins = ["*"]
+
 [gas]
 gas_adjustment = 1.5
 gas_prices = "0.00125akii"
 gas_limit = 2000000
-
-[server]
-listen_addr = "0.0.0.0:99999"
-read_timeout = "20s"
-verbose_cors = true
-write_timeout = "20s"
 
 [[currency_pairs]]
 base = "ATOM"
@@ -229,16 +245,21 @@ func TestParseConfig_Valid_NoTelemetry(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
+[main]
+enable_voting = true
+enable_server = true
+
+[server]
+listen_addr = "0.0.0.0:7171"
+read_timeout = "20s"
+write_timeout = "20s"
+enable_cors = true
+allowed_origins = ["*"]
+
 [gas]
 gas_adjustment = 1.5
 gas_prices = "0.00125akii"
 gas_limit = 2000000
-
-[server]
-listen_addr = "0.0.0.0:99999"
-read_timeout = "20s"
-verbose_cors = true
-write_timeout = "20s"
 
 [[currency_pairs]]
 base = "ATOM"
@@ -374,16 +395,21 @@ func TestParseConfig_Valid_Deviations(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
+[main]
+enable_voting = true
+enable_server = true
+
+[server]
+listen_addr = "0.0.0.0:7171"
+read_timeout = "20s"
+write_timeout = "20s"
+enable_cors = true
+allowed_origins = ["*"]
+
 [gas]
 gas_adjustment = 1.5
 gas_prices = "0.00125akii"
 gas_limit = 2000000
-
-[server]
-listen_addr = "0.0.0.0:99999"
-read_timeout = "20s"
-verbose_cors = true
-write_timeout = "20s"
 
 [[deviation_thresholds]]
 base = "USDT"
@@ -472,6 +498,17 @@ func TestParseConfig_Invalid_Deviations(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
+[main]
+enable_voting = true
+enable_server = true
+
+[server]
+listen_addr = "0.0.0.0:7171"
+read_timeout = "20s"
+write_timeout = "20s"
+enable_cors = true
+allowed_origins = ["*"]
+
 gas_adjustment = 1.5
 gas_limit = 2000000
 
