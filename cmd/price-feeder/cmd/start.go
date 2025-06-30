@@ -220,11 +220,6 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 		})
 	}
 
-	// start the process that calculates oracle prices and votes
-	group.Go(func() error {
-		return startPriceOracle(ctx, logger, oracle)
-	})
-
 	// Block main process until all spawned goroutines have gracefully exited and
 	// signal has been captured in the main process or if an error occurs.
 	return group.Wait()
