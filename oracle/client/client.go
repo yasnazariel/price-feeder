@@ -318,6 +318,7 @@ func (oc OracleClient) CreateTxFactory() (tx.Factory, error) {
 		WithTxConfig(clientCtx.TxConfig).
 		WithGasAdjustment(oc.GasAdjustment).
 		WithGasPrices(oc.GasPrices).
+		WithGas(0).
 		WithKeybase(clientCtx.Keyring).
 		WithSignMode(signing.SignMode_SIGN_MODE_DIRECT).
 		WithSimulateAndExecute(true)
