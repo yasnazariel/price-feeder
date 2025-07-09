@@ -33,7 +33,7 @@ gas_adjustment = 1.5
 # Gas prices are specified in the format "<amount><denom>", e.g., "400000000000akii"
 gas_prices = "400000000000akii"
 # Gas limit is the maximum amount of gas that can be used for a transaction
-gas_limit = 2000000
+gas_limit = 200000
 
 #######################################################
 ###                   Account                       ###
