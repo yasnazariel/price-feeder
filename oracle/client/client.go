@@ -14,6 +14,8 @@ import (
 	tmrpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	tmjsonclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
 
+	"cosmossdk.io/math"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
@@ -203,6 +205,9 @@ func (oc OracleClient) BroadcastTx(
 	if err != nil {
 		return nil, err
 	}
+
+	// Calculate the fee for the TX
+	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin("akii", math.NewIntFromUint64(80000000000000000))))
 
 	txBuilder.SetGasLimit(oc.GasLimit)
 
