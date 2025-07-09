@@ -14,6 +14,8 @@ import (
 	tmrpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	tmjsonclient "github.com/cometbft/cometbft/rpc/jsonrpc/client"
 
+	"cosmossdk.io/math"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/rpc"
@@ -204,6 +206,9 @@ func (oc OracleClient) BroadcastTx(
 		return nil, err
 	}
 
+	// Calculate the fee for the TX and set the gas limit
+	fees, _ := txf.GasPrices().MulDec(math.LegacyNewDec(int64(oc.GasLimit))).TruncateDecimal()
+	txBuilder.SetFeeAmount(fees)
 	txBuilder.SetGasLimit(oc.GasLimit)
 
 	// Sign the transaction
@@ -218,7 +223,8 @@ func (oc OracleClient) BroadcastTx(
 		return nil, err
 	}
 
-	oc.Logger.Info().Msg(fmt.Sprintf("Sending broadcastTx with account sequence number %d", txf.Sequence()))
+	// Log the transaction details
+	oc.Logger.Info().Msg(fmt.Sprintf("Sending broadcastTx with account sequence number %d and fee %s", txf.Sequence(), txBuilder.GetTx().GetFee().String()))
 
 	// broadcast transaction
 	resp, err := clientCtx.BroadcastTx(txBytes)
