@@ -2,9 +2,21 @@
 
 This is the Kiichain version of the incredible work of SEI on the price feeder module. The original implementation is available at [SEI's price-feeder](https://github.com/sei-protocol/sei-chain/tree/main/oracle/price-feeder).
 
+Further documentation for the project can be found at [Running the Price feeder](https://docs.kiiglobal.io/docs/validate-the-network/run-a-validator-full-node/running-the-price-feeder).
+
 # Setup
 
 If a cluster is running Oracle price-feeder, your validator is also required to run a price feeder or your validator will be jailed for missing votes.
+
+## Bootstrap
+
+We highly recommend bootstrapping the price-feeder installation using our installer:
+
+```bash
+wget https://raw.githubusercontent.com/KiiChain/testnets/main/testnet_oro/run_price_feeder.sh
+chmod +x run_price_feeder.sh
+./run_price_feeder.sh
+```
 
 ## Create an account for Oracle Price Feeder Delegate
 
@@ -90,6 +102,7 @@ price_feeder start oracle/price_feeder/config.toml
 
 A HTTP server can be enabled on the price feeder.
 The server will expose the following endpoints:
+
 - `/healthz`: A simple health check endpoint that returns a 200 OK response.
 - `/prices`: Returns the current prices fetched from the oracle's set of exchange rate providers.
 - `/metrics`: Returns the current metrics collected by the price feeder, including prices and their timestamps.
