@@ -206,9 +206,8 @@ func (oc OracleClient) BroadcastTx(
 		return nil, err
 	}
 
-	// Calculate the fee for the TX
-	txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin("akii", math.NewIntFromUint64(80000000000000000))))
-
+	// Calculate the fee for the TX and set the gas limit
+	txf.GasPrices().MulDec(math.LegacyNewDec(int64(oc.GasLimit)))
 	txBuilder.SetGasLimit(oc.GasLimit)
 
 	// Sign the transaction
@@ -223,7 +222,8 @@ func (oc OracleClient) BroadcastTx(
 		return nil, err
 	}
 
-	oc.Logger.Info().Msg(fmt.Sprintf("Sending broadcastTx with account sequence number %d", txf.Sequence()))
+	// Log the transaction details
+	oc.Logger.Info().Msg(fmt.Sprintf("Sending broadcastTx with account sequence number %d and fee %s", txf.Sequence(), txf.Fees().String()))
 
 	// broadcast transaction
 	resp, err := clientCtx.BroadcastTx(txBytes)
@@ -323,7 +323,6 @@ func (oc OracleClient) CreateTxFactory() (tx.Factory, error) {
 		WithTxConfig(clientCtx.TxConfig).
 		WithGasAdjustment(oc.GasAdjustment).
 		WithGasPrices(oc.GasPrices).
-		WithGas(0).
 		WithKeybase(clientCtx.Keyring).
 		WithSignMode(signing.SignMode_SIGN_MODE_DIRECT).
 		WithSimulateAndExecute(true)
