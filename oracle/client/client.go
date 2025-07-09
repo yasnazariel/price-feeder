@@ -207,7 +207,8 @@ func (oc OracleClient) BroadcastTx(
 	}
 
 	// Calculate the fee for the TX and set the gas limit
-	txf.GasPrices().MulDec(math.LegacyNewDec(int64(oc.GasLimit)))
+	fees, _ := txf.GasPrices().MulDec(math.LegacyNewDec(int64(oc.GasLimit))).TruncateDecimal()
+	txBuilder.SetFeeAmount(fees)
 	txBuilder.SetGasLimit(oc.GasLimit)
 
 	// Sign the transaction
