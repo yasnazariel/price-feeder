@@ -224,7 +224,7 @@ func (oc OracleClient) BroadcastTx(
 	}
 
 	// Log the transaction details
-	oc.Logger.Info().Msg(fmt.Sprintf("Sending broadcastTx with account sequence number %d and fee %s", txf.Sequence(), txf.Fees().String()))
+	oc.Logger.Info().Msg(fmt.Sprintf("Sending broadcastTx with account sequence number %d and fee %s", txf.Sequence(), txBuilder.GetTx().GetFee().String()))
 
 	// broadcast transaction
 	resp, err := clientCtx.BroadcastTx(txBytes)
