@@ -162,6 +162,58 @@ $ price-feeder start /path/to/price_feeder_config.toml
 
 ## Configuration
 
+### Configuaration Reference
+
+This section explains each configuration field in config.example.toml, helping you set up the price feeder correctly and avoid misconfiguration.
+
+[main] - Main Settings
+
+```
+# enable_voting (bool): whether the price feeder sends votes.on-chain
+# enable_server (bool): whether the local HTTP server is enabled.
+```
+
+[server] - HTTP Server Configuration
+
+```
+# listen_addr (string): the address and port where the HTTP server listens.
+# read_timeout, write_timeout (duration): timeouts for HTTP operations.
+# enable_cors (bool): whether to allow cors requests.
+# allowed_origins (list): allowed origins for CORS. Use ["*"] to allow all.
+```
+
+[gas] - Gas Configuration
+
+```
+# gas_adjustment (float): multiplier applied to gas estimates.
+# gas_prices (string): gas price used in transactions.
+# gas_limit (int): max gas allowed per transaction.
+```
+
+[account] - Oracle Feeder Account
+
+```
+# address (string): feeder account address.
+# validator (string): validator operator address.
+# prefix (string): bech32 for address.
+# chani_id (string): the kiichain chain ID.
+```
+
+[keyring] - Keyring Configuration
+
+```
+# backend (string): keyring type.
+# dir (string): path to the keyring storage directory.
+```
+
+[rpc] - Node Connection Settings
+
+```
+# grpc_endpoint (string): gRPC endpoint used for queries and transactions.
+# rpc_timeout (duration): timeout RPC requests.
+#tmrpc_endpoint (string): tendermint RPC endpoint for blockchain state.
+```
+
 ### telemetry
 
 A set of options for the application's telemetry, which is disabled by default. An in-memory sink is the default, but Prometheus is also supported. We use the [cosmos sdk telemetry package](https://github.com/cosmos/cosmos-sdk/blob/main/docs/core/telemetry.md).
