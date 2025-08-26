@@ -1,0 +1,81 @@
+package config_test
+
+import (
+	"os"
+	"path/filepath"
+	"testing"
+
+	cf "github.com/kiichain/price-feeder/config"
+)
+
+func TestParseConfig_Minimal(t *testing.T) {
+	tmp := t.TempDir()
+	cfgPath := filepath.Join(tmp, "test-config.toml")
+
+	// minimal but structurally valid TOML for parsing
+	const toml = `
+[main]
+enable_server = false
+enable_voting = false
+
+[server]
+listen_addr   = "127.0.0.1:7173"
+read_timeout  = "10s"
+write_timeout = "10s"
+enable_cors   = false
+allowed_origins = []
+
+[[currency_pairs]]
+base        = "BTC"
+chain_denom = "ATOM"
+quote       = "USD"
+providers   = ["mock"]
+
+[account]
+chain_id  = "kiichain-local-1"
+address   = "kii1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+validator = "kiivaloper1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+prefix    = "kii"
+
+[keyring]
+backend = "test"
+dir     = "/tmp/kii-keyring"
+
+[rpc]
+tmrpc_endpoint = "http://localhost:26657"
+grpc_endpoint  = "localhost:9090"
+rpc_timeout    = "1s"
+
+[gas]
+gas_adjustment = 1.2
+gas_prices     = "0.025uoro"
+gas_limit      = 200000
+`
+
+	if err := os.WriteFile(cfgPath, []byte(toml), 0o644); err != nil {
+		t.Fatalf("write tmp config: %v", err)
+	}
+
+	cfg, err := cf.ParseConfig(cfgPath)
+	if err != nil {
+		t.Fatalf("ParseConfig returned error: %v", err)
+	}
+
+	// basic sanity checks on a few fields
+	if cfg.Main.EnableServer != false {
+		t.Fatalf("unexpected EnableServer: %v", cfg.Main.EnableServer)
+	}
+	if cfg.Server.ListenAddress != "127.0.0.1:7173" {
+		t.Fatalf("unexpected ListenAddress: %s", cfg.Server.ListenAddress)
+	}
+	if len(cfg.CurrencyPairs) != 1 || cfg.CurrencyPairs[0].Base != "BTC" {
+		t.Fatalf("unexpected currency pairs: %+v", cfg.CurrencyPairs)
+	}
+}
+
+func TestParseConfig_FileNotFound(t *testing.T) {
+	_, err := cf.ParseConfig("this-file-does-not-exist.toml")
+	if err == nil {
+		t.Fatalf("expected error for missing file")
+	}
+}
